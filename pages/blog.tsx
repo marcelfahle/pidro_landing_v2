@@ -68,7 +68,7 @@ export default function Blog({ data }: { data: any }) {
           <ul>
             {data.allPosts.map((post: any) => {
               return (
-                <ListItem>
+                <ListItem key={post.slug}>
                   <Link href={`/posts/${post.slug}`}>{post.title}</Link>
                 </ListItem>
               );
