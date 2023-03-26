@@ -120,7 +120,7 @@ export function Layout({
       </Content>
 
       <SocialButtons>
-        <p>Let's get Social:</p>
+        <p>Let&apos;s get Social:</p>
         <ButtonList>
           <FacebookShareButton
             quote={socialMedia.facebookShareTitle}
@@ -183,7 +183,7 @@ export function Layout({
       </Badges>
       <Support>
         <p>
-          Technical Problems? We're here to help! <br />
+          Technical Problems? We&apos;re here to help! <br />
           <a href="mailto:support@pidro.net">Click here</a>
         </p>
       </Support>
