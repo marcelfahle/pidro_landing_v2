@@ -95,12 +95,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 export default function Post({
   data,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  console.log(data);
   return (
     <Layout
       socialMedia={data.socialMediaSetting}
       appStoreUrl={data.home.appStoreUrl}
       playStoreUrl={data.home.playStoreUrl}
+      macStoreUrl={data.home.macStoreUrl}
     >
       <Wrapper>
         <div className="prose prose-xl mx-auto">
