@@ -103,21 +103,23 @@ export default function Post({
     >
       <Wrapper>
         <h2>{data.post.title}</h2>
-        <StructuredText
-          data={data.post.content}
-          renderBlock={({ record }: { record: any }) => {
-            if (record.__typename === "ImageBlockRecord") {
-              return <Image data={record.image.responsiveImage} />;
-            }
+        <div className="prose mx-auto">
+          <StructuredText
+            data={data.post.content}
+            renderBlock={({ record }: { record: any }) => {
+              if (record.__typename === "ImageBlockRecord") {
+                return <Image data={record.image.responsiveImage} />;
+              }
 
-            return (
-              <>
-                <p>Unknown Error</p>
-                <pre>{JSON.stringify(record, null, 2)}</pre>
-              </>
-            );
-          }}
-        />
+              return (
+                <>
+                  <p>Unknown Error</p>
+                  <pre>{JSON.stringify(record, null, 2)}</pre>
+                </>
+              );
+            }}
+          />
+        </div>
       </Wrapper>
     </Layout>
   );
