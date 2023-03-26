@@ -102,8 +102,8 @@ export default function Post({
       playStoreUrl={data.home.playStoreUrl}
     >
       <Wrapper>
+        <div className="prose prose-xl mx-auto">
         <h2>{data.post.title}</h2>
-        <div className="prose mx-auto">
           <StructuredText
             data={data.post.content}
             renderBlock={({ record }: { record: any }) => {
