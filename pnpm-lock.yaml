@@ -13,6 +13,7 @@ specifiers:
   graphql: ^16.6.0
   graphql-request: ^5.2.0
   next: 13.2.4
+  next-plausible: ^3.7.2
   postcss: 8.4.21
   prettier: ^2.8.7
   react: 18.2.0
@@ -32,6 +33,7 @@ dependencies:
   graphql: 16.6.0
   graphql-request: 5.2.0_graphql@16.6.0
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
+  next-plausible: 3.7.2_ld2jel3hspngo3u5lti2kgl2sq
   postcss: 8.4.21
   react: 18.2.0
   react-datocms: 4.0.10_react@18.2.0
@@ -2153,6 +2155,18 @@ packages:
 
   /natural-compare/1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+    dev: false
+
+  /next-plausible/3.7.2_ld2jel3hspngo3u5lti2kgl2sq:
+    resolution: {integrity: sha512-9PqFiVtD1kZO5gHFYTcgilHhg2WhMzD6I4NK/RUh9DGavD1N11IhNAvyGLFmvB3f4FtHC9IoAsauYDtQBt+riA==}
+    peerDependencies:
+      next: ^11.1.0 || ^12.0.0 || ^13.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      next: 13.2.4_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /next/13.2.4_biqbaboplfbrettd7655fr4n2y:

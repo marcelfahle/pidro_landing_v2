@@ -18,7 +18,8 @@ import {
 } from "react-share";
 
 import appStoreLogo from "../public/badge-appstore.png";
-import playStoreLogo from "../public/badge-playstore.png";
+import macStoreLogo from "../public/badge-macstore.png";
+import playStoreLogo from "../public/badge-playstore.jpeg";
 
 const sanchez = Sanchez({ subsets: ["latin"], weight: "400" });
 
@@ -31,14 +32,15 @@ const SiteWrapper = styled.div`
     rgba(28, 103, 160, 1) 0%,
     rgba(13, 48, 75, 1) 100%
   );
-  font-family: "Sanchez", serif;
   line-height: 1.2;
   color: white;
   a {
     text-decoration: none;
     color: #ffe230;
   }
-  a:visited,
+  nav a {
+    color: white;
+  }
   a:hover,
   a:active {
     color: #ffe230;
@@ -84,13 +86,14 @@ const Badges = styled.div`
     list-style: none;
     margin: 0;
     padding-top: 20px;
+    display: flex;
     li {
+      margin: 0 4px;
       display: inline-block;
-      width: 50%;
-      max-width: 130px;
       img {
-        max-width: 100%;
-        max-height: 60px;
+        border-radius: 6px;
+        border: 1px solid #09afe6;
+        max-height: 40px;
       }
     }
   }
@@ -103,6 +106,7 @@ const Support = styled.div`
 type LayoutProps = {
   socialMedia: any;
   appStoreUrl: string;
+  macStoreUrl: string;
   playStoreUrl: string;
   children: ReactNode;
 };
@@ -111,10 +115,12 @@ export function Layout({
   children,
   socialMedia,
   appStoreUrl,
+  macStoreUrl,
   playStoreUrl,
 }: LayoutProps) {
   return (
-    <SiteWrapper>
+    <div className={`${sanchez.className}`}>
+    <SiteWrapper >
       <Header />
       <Content>
         <main className={`${sanchez.className}`}>{children}</main>
@@ -163,22 +169,31 @@ export function Layout({
       <Badges>
         <ul>
           <li>
-            <Link href={appStoreUrl} target="_blank">
+            <a href={appStoreUrl} target="_blank">
               <Image
                 alt="Download on the App Store"
-                className="apple"
+                height="40"
                 src={appStoreLogo}
               />
-            </Link>
+            </a>
           </li>
           <li>
-            <Link href={playStoreUrl} target="_blank">
+            <a href={macStoreUrl} target="_blank">
+              <Image
+                alt="Download on the Mac App Store"
+                height="40"
+                src={macStoreLogo}
+              />
+            </a>
+          </li>
+          <li>
+            <a href={playStoreUrl} target="_blank">
               <Image
                 alt="Get it on Google Play"
-                className="android"
+                height="40"
                 src={playStoreLogo}
               />
-            </Link>
+            </a>
           </li>
         </ul>
       </Badges>
@@ -209,5 +224,6 @@ export function Layout({
         </p>
       </Copyright>
     </SiteWrapper>
+    </div>
   );
 }

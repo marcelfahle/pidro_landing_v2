@@ -54,6 +54,7 @@ const QUERY = `
     }
     home {
       appStoreUrl
+      macStoreUrl
       playStoreUrl
     }
     socialMediaSetting {

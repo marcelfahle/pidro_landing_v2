@@ -1,20 +1,32 @@
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
-import styled from 'styled-components'
+import styled from "styled-components";
 import Image from "next/image";
-import ReactSwipe from 'react-swipe'
+import ReactSwipe from "react-swipe";
 
 import { request } from "../lib/datocms";
 import { Layout } from "@/components/layout";
 
 import appStoreLogo from "../public/badge-appstore.png";
-import playStoreLogo from "../public/badge-playstore.png";
+import macStoreLogo from "../public/badge-macstore.png";
+import playStoreLogo from "../public/badge-playstore.jpeg";
 
-
-const Systems = styled.h2`
+const Headline = styled.h2`
+  color: #ffe230;
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.1rem;
+`;
+const Subheadline = styled.h3`
   color: white;
   text-align: center;
   font-size: 1.4em;
-`
+  margin-bottom: 2rem;
+`;
+const Systems = styled.p`
+  color: white;
+  text-align: center;
+  font-size: 1.4em;
+`;
 
 const Badges = styled.div`
   display: table;
@@ -23,24 +35,25 @@ const Badges = styled.div`
     list-style: none;
     margin: 0;
     padding-top: 20px;
+    display: flex;
     li {
+      margin: 0 4px;
       display: inline-block;
-      width: 50%;
-      max-width: 130px;
       img {
-        max-width: 100%;
+        border-radius: 6px;
+        border: 1px solid #09afe6;
         max-height: 60px;
       }
     }
   }
-`
-
+`;
 
 const HOMEPAGE_QUERY = `{
   home {
     intro
     appStoreUrl
     playStoreUrl
+    macStoreUrl
     socialShareUrl
     screenshots {
       url
@@ -64,78 +77,105 @@ export const getStaticProps: GetStaticProps = async () => {
     query: HOMEPAGE_QUERY,
   });
   return {
-    props: { data }
+    props: { data },
   };
-}
+};
 
+export default function Home({
+  data,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  return (
+    <Layout
+      socialMedia={data.socialMediaSetting}
+      appStoreUrl={data.home.appStoreUrl}
+      playStoreUrl={data.home.playStoreUrl}
+      macStoreUrl={data.home.macStoreUrl}
+    >
+      <Headline>The free multiplayer card game</Headline>
+      <Subheadline>
+        Test your skills, build alliances, and triumph in a captivating game of
+        strategy.
+      </Subheadline>
+      <Systems>
+        <br />
+        Out now for{" "}
+        <a href={data.home.appStoreUrl} target="_blank">
+          iOS
+        </a>
+        ,{" "}
+        <a href={data.home.macStoreUrl} target="_blank">
+          Mac{" "}
+        </a>
+        and{" "}
+        <a href={data.home.playStoreUrl} target="_blank">
+          Android
+        </a>
+        .
+      </Systems>
 
+      <Badges>
+        <ul>
+          <li>
+            <a href={data.home.appStoreUrl} target="_blank">
+              <Image
+                alt="Download on the App Store"
+                height="60"
+                src={appStoreLogo}
+              />
+            </a>
+          </li>
+          <li>
+            <a href={data.home.macStoreUrl} target="_blank">
+              <Image
+                alt="Download on the Mac App Store"
+                height="60"
+                src={macStoreLogo}
+              />
+            </a>
+          </li>
+          <li>
+            <a href={data.home.playStoreUrl} target="_blank">
+              <Image
+                alt="Get it on Google Play"
+                height="60"
+                src={playStoreLogo}
+              />
+            </a>
+          </li>
+        </ul>
+      </Badges>
 
-export default function Home({data}: InferGetStaticPropsType<typeof getStaticProps>) {
-  return <Layout socialMedia={data.socialMediaSetting} appStoreUrl={data.home.appStoreUrl} playStoreUrl={data.home.playStoreUrl}>
-    <Systems>
-      Pidro, the Multiplayer Card Game
-      <br />
-      for{' '}
-      <a href={data.home.appStoreUrl} target="_blank">
-        iPhone
-      </a>
-      ,{' '}
-      <a href={data.home.appStoreUrl} target="_blank">
-        iPad{' '}
-      </a>
-      and{' '}
-      <a href={data.home.playStoreUrl} target="_blank">
-        Android
-      </a>
-      .
-    </Systems>
+      <div className="temp-wrapper temp-wrapper--wider ">
+        <div className="px px--ls">
+          <div className="px__body">
+            <div className="px__body__cut"></div>
+            <div className="px__body__speaker"></div>
+            <div className="px__body__sensor"></div>
 
-    <Badges>
-      <ul>
-        <li>
-          <a href={data.home.appStoreUrl} target="_blank">
-            <Image alt="Download on the App Store" className="apple" src={appStoreLogo} />
-          </a>
-        </li>
-        <li>
-          <a href={data.home.playStoreUrl} target="_blank">
-            <Image alt="Get it on Google Play" className="android" src={playStoreLogo} />
-          </a>
-        </li>
-      </ul>
-    </Badges>
+            <div className="px__body__mute"></div>
+            <div className="px__body__up"></div>
+            <div className="px__body__down"></div>
+            <div className="px__body__right"></div>
+          </div>
 
-    <div className="temp-wrapper temp-wrapper--wider ">
-      <div className="px px--ls">
-        <div className="px__body">
-          <div className="px__body__cut"></div>
-          <div className="px__body__speaker"></div>
-          <div className="px__body__sensor"></div>
-
-          <div className="px__body__mute"></div>
-          <div className="px__body__up"></div>
-          <div className="px__body__down"></div>
-          <div className="px__body__right"></div>
-        </div>
-
-        <div className="px__screen">
-          <div className="px__screen__">
-            <div className="px__screen__frame">
-              <ReactSwipe
-                className="carousel"
-                swipeOptions={{ auto: 3000, continuous: true }}
-              >
-                {data &&
-                  data.home.screenshots &&
-                  data.home.screenshots.map((s:{url: string}) => (
-                    <img key={s.url} src={s.url} />
-                  ))}
-              </ReactSwipe>
+          <div className="px__screen">
+            <div className="px__screen__">
+              <div className="px__screen__frame">
+                <ReactSwipe
+                  className="carousel"
+                  swipeOptions={{ auto: 3000, continuous: true }}
+                >
+                  {data &&
+                    data.home.screenshots &&
+                    data.home.screenshots.map((s: { url: string }) => (
+                      <img key={s.url} src={s.url} />
+                    ))}
+                </ReactSwipe>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-  </Layout>
+    </Layout>
+  );
 }
