@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Sanchez } from "next/font/google";
 import styled from "styled-components";
 import Header from "./header";
@@ -162,49 +163,49 @@ export function Layout({
       <Badges>
         <ul>
           <li>
-            <a href={appStoreUrl} target="_blank">
+            <Link href={appStoreUrl} target="_blank">
               <Image
                 alt="Download on the App Store"
                 className="apple"
                 src={appStoreLogo}
               />
-            </a>
+            </Link>
           </li>
           <li>
-            <a href={playStoreUrl} target="_blank">
+            <Link href={playStoreUrl} target="_blank">
               <Image
                 alt="Get it on Google Play"
                 className="android"
                 src={playStoreLogo}
               />
-            </a>
+            </Link>
           </li>
         </ul>
       </Badges>
       <Support>
         <p>
           Technical Problems? We&apos;re here to help! <br />
-          <a href="mailto:support@pidro.net">Click here</a>
+          <Link href="mailto:support@pidro.net">Click here</Link>
         </p>
       </Support>
 
       <Copyright>
         <p>Oneapps &copy; 2016-{new Date().getFullYear()}</p>
         <p>
-          <a href="/privacy-policy">Privacy Policy</a>
+          <Link href="/privacy-policy">Privacy Policy</Link>
           {` - `}
-          <a href="/terms-of-use">Terms of Use</a>
+          <Link href="/terms-of-use">Terms of Use</Link>
           {` - `}
           <br />
           In-App Purchases:
           {` - `}
-          <a href="/in-app-purchases-ios-en">iOS (english)</a>
+          <Link href="/in-app-purchases-ios-en">iOS (english)</Link>
           {` - `}
-          <a href="/in-app-purchases-ios-sv">iOS (swedish)</a>
+          <Link href="/in-app-purchases-ios-sv">iOS (swedish)</Link>
           {` - `}
-          <a href="/in-app-purchases-android-en">Android (english)</a>
+          <Link href="/in-app-purchases-android-en">Android (english)</Link>
           {` - `}
-          <a href="/in-app-purchases-android-sv">Android (swedish)</a>
+          <Link href="/in-app-purchases-android-sv">Android (swedish)</Link>
         </p>
       </Copyright>
     </SiteWrapper>
