@@ -1,5 +1,6 @@
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
-import { request } from "../lib/datocms";
+import { StructuredText, Image } from "react-datocms";
+import { request } from "../../lib/datocms";
 import styled from "styled-components";
 import { Layout } from "@/components/layout";
 
@@ -42,11 +43,14 @@ const Content = styled.div`
 `;
 
 const QUERY = `
-  query PageBySlug($slug: String) {
-    page(filter: {slug: {eq: $slug}}) {
+  query PostBySlug($slug: String) {
+    post(filter: {slug: {eq: $slug}}) {
       title
       slug
-      content(markdown: true)
+      content {
+        value
+
+      }
     }
     home {
       appStoreUrl
@@ -67,10 +71,10 @@ const QUERY = `
 }`;
 
 export async function getStaticPaths() {
-  const data: any = await request({ query: `{ allPages { slug } }` });
+  const data: any = await request({ query: `{ allPosts { slug } }` });
 
   return {
-    paths: data.allPages.map((page: { slug: string }) => `/${page.slug}`),
+    paths: data.allPosts.map((post: { slug: string }) => `/posts/${post.slug}`),
     fallback: false,
   };
 }
@@ -87,9 +91,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   };
 };
 
-export default function Page({
+export default function Post({
   data,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  console.log(data);
   return (
     <Layout
       socialMedia={data.socialMediaSetting}
@@ -97,10 +102,20 @@ export default function Page({
       playStoreUrl={data.home.playStoreUrl}
     >
       <Wrapper>
-        <h2>{data.page.title}</h2>
-        <Content
-          dangerouslySetInnerHTML={{
-            __html: data.page.content,
+        <h2>{data.post.title}</h2>
+        <StructuredText
+          data={data.post.content}
+          renderBlock={({ record }: { record: any }) => {
+            if (record.__typename === "ImageBlockRecord") {
+              return <Image data={record.image.responsiveImage} />;
+            }
+
+            return (
+              <>
+                <p>Unknown Error</p>
+                <pre>{JSON.stringify(record, null, 2)}</pre>
+              </>
+            );
           }}
         />
       </Wrapper>
