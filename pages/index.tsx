@@ -1,4 +1,5 @@
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
+import { renderMetaTags } from "react-datocms";
 import Head from 'next/head';
 import styled from "styled-components";
 import Image from "next/image";
@@ -59,6 +60,12 @@ const HOMEPAGE_QUERY = `{
     screenshots {
       url
     }
+    seo: _seoMetaTags {
+        attributes
+        content
+        tag
+      }
+    }
   }
   socialMediaSetting {
     sharingUrl
@@ -93,21 +100,7 @@ export default function Home({
       macStoreUrl={data.home.macStoreUrl}
     >
       <Head>
-        <title>Pidro - The Multiplayer Card Game for iOS, Mac and Android</title>
-        <meta name="description" content="The Multiplayer Card Game for iOS, Mac and Android"/>
-
-        <meta property="og:url" content="https://www.pidro.online" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Pidro" />
-        <meta property="og:description" content="The Multiplayer Card Game for iOS, Mac and Android" />
-        <meta property="og:image" content="" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:domain" content="pidro.online" />
-        <meta property="twitter:url" content="https://www.pidro.online" />
-        <meta name="twitter:title" content="Pidro" />
-        <meta name="twitter:description" content="The Multiplayer Card Game for iOS, Mac and Android" />
-        <meta name="twitter:image" content="" />
+        <Head>{renderMetaTags(data.home.seo)}</Head>
       </Head>
       <Headline>The free multiplayer card game</Headline>
       <Subheadline>
