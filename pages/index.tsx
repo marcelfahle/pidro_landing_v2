@@ -98,9 +98,7 @@ export default function Home({
       playStoreUrl={data.home.playStoreUrl}
       macStoreUrl={data.home.macStoreUrl}
     >
-      <Head>
-        <Head>{renderMetaTags(data.home.seo)}</Head>
-      </Head>
+      <Head>{renderMetaTags(data.home.seo)}</Head>
       <Headline>The free multiplayer card game</Headline>
       <Subheadline>
         Test your skills, build alliances, and triumph in a captivating game of

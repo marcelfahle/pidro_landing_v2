@@ -1,4 +1,6 @@
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
+import { renderMetaTags } from "react-datocms";
+import Head from 'next/head';
 import { StructuredText, Image } from "react-datocms";
 import { request } from "../../lib/datocms";
 import styled from "styled-components";
@@ -62,6 +64,11 @@ const QUERY = `
           }
         }
       }
+      seo: _seoMetaTags {
+        attributes
+        content
+        tag
+      }
     }
     home {
       appStoreUrl
@@ -115,6 +122,7 @@ export default function Post({
       playStoreUrl={data.home.playStoreUrl}
       macStoreUrl={data.home.macStoreUrl}
     >
+      <Head>{renderMetaTags(data.post.seo)}</Head>
       <Wrapper>
         <div className="prose prose-xl mx-auto">
         <h2>{data.post.title}</h2>

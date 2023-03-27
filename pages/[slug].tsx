@@ -1,4 +1,6 @@
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
+import { renderMetaTags } from "react-datocms";
+import Head from 'next/head';
 import { request } from "../lib/datocms";
 import styled from "styled-components";
 import { Layout } from "@/components/layout";
@@ -47,6 +49,11 @@ const QUERY = `
       title
       slug
       content(markdown: true)
+      seo: _seoMetaTags {
+        attributes
+        content
+        tag
+      }
     }
     home {
       appStoreUrl
@@ -98,6 +105,7 @@ export default function Page({
       playStoreUrl={data.home.playStoreUrl}
       macStoreUrl={data.home.macStoreUrl}
     >
+      <Head>{renderMetaTags(data.page.seo)}</Head>
       <Wrapper>
         <div className="prose prose-xl mx-auto">
         <h2>{data.page.title}</h2>

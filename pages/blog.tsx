@@ -1,4 +1,6 @@
 import type { GetStaticProps } from "next";
+import { renderMetaTags } from "react-datocms";
+import Head from 'next/head';
 import Link from "next/link";
 import { request } from "../lib/datocms";
 import styled from "styled-components";
@@ -31,6 +33,11 @@ const QUERY = `
       appStoreUrl
       playStoreUrl
       macStoreUrl
+      seo: _seoMetaTags {
+        attributes
+        content
+        tag
+      }
     }
     socialMediaSetting {
       sharingUrl
@@ -62,6 +69,7 @@ export default function Blog({ data }: { data: any }) {
       playStoreUrl={data.home.playStoreUrl}
       macStoreUrl={data.home.macStoreUrl}
     >
+      <Head>{renderMetaTags(data.home.seo)}</Head>
       <Wrapper>
         <div className="prose prose-xl mx-auto">
           <h2>Latest Blog Posts</h2>
