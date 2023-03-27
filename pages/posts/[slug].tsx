@@ -122,7 +122,7 @@ export default function Post({
             data={data.post.content}
             renderBlock={({ record }: { record: any }) => {
               if (record.__typename === "ImageRecord") {
-                return <div className="relative"><Image layout="responsive" objectFit="contain" data={record.image.responsiveImage} /></div>;
+                return <div className="relative not-prose mb-8"><Image layout="responsive" objectFit="contain" data={record.image.responsiveImage} /></div>;
               }
 
               return (
