@@ -3,6 +3,7 @@ import { StructuredText, Image } from "react-datocms";
 import { request } from "../../lib/datocms";
 import styled from "styled-components";
 import { Layout } from "@/components/layout";
+import { metaTagsFragment, responsiveImageFragment } from "@/lib/fragments";
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -49,7 +50,17 @@ const QUERY = `
       slug
       content {
         value
-
+        blocks {
+           __typename
+          ...on ImageRecord {
+            id
+            image {
+              responsiveImage(imgixParams: {}) {
+                ...responsiveImageFragment
+              }
+            }
+          }
+        }
       }
     }
     home {
@@ -69,7 +80,9 @@ const QUERY = `
       eMailBody
       eMailSubject
     }
-}`;
+}
+${responsiveImageFragment}
+`;
 
 export async function getStaticPaths() {
   const data: any = await request({ query: `{ allPosts { slug } }` });
@@ -108,8 +121,8 @@ export default function Post({
           <StructuredText
             data={data.post.content}
             renderBlock={({ record }: { record: any }) => {
-              if (record.__typename === "ImageBlockRecord") {
-                return <Image data={record.image.responsiveImage} />;
+              if (record.__typename === "ImageRecord") {
+                return <div className="relative"><Image layout="responsive" objectFit="contain" data={record.image.responsiveImage} /></div>;
               }
 
               return (
