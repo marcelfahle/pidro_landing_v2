@@ -61,10 +61,9 @@ const HOMEPAGE_QUERY = `{
       url
     }
     seo: _seoMetaTags {
-        attributes
-        content
-        tag
-      }
+      attributes
+      content
+      tag
     }
   }
   socialMediaSetting {
