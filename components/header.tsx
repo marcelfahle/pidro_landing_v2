@@ -41,9 +41,9 @@ const HomeLink = styled(Link)`
   }
 `;
 
-const Header = ({}) => (
+const Header = ({ }) => (
   <HeaderWrapper>
-    <nav className="absolute top-2 right-0">
+    <nav className="absolute top-2 right-0 z-10">
       <ul className="flex space-x-4">
         <li>
           <Link
@@ -56,6 +56,11 @@ const Header = ({}) => (
         <li>
           <Link className="text-white hover:text-[#ffe230]" href="/blog">
             Blog
+          </Link>
+        </li>
+        <li>
+          <Link className="text-white hover:text-[#ffe230]" href="/changelog">
+            Changelog
           </Link>
         </li>
         <li>

@@ -120,110 +120,114 @@ export function Layout({
 }: LayoutProps) {
   return (
     <div className={`${sanchez.className}`}>
-    <SiteWrapper >
-      <Header />
-      <Content>
-        <main className={`${sanchez.className}`}>{children}</main>
-      </Content>
+      <SiteWrapper >
+        <Header />
+        <Content>
+          <main className={`${sanchez.className}`}>{children}</main>
+        </Content>
 
-      <SocialButtons>
-        <p>Let&apos;s get Social:</p>
-        <ButtonList>
-          <FacebookShareButton
-            quote={socialMedia.facebookShareTitle}
-            hashtag={socialMedia.facebookShareHashtag}
-            url={socialMedia.sharingUrl}
-          >
-            <FacebookIcon size={32} round={true} />
-          </FacebookShareButton>
-          <TwitterShareButton
-            url={socialMedia.sharingUrl}
-            title={socialMedia.twitterTitle}
-            via={socialMedia.twitterVia}
-          >
-            <TwitterIcon size={32} round={true} />
-          </TwitterShareButton>
-          <WhatsappShareButton
-            url={socialMedia.sharingUrl}
-            title={socialMedia.whatsappTitle}
-          >
-            <WhatsappIcon size={32} round={true} />
-          </WhatsappShareButton>
-          <LinkedinShareButton
-            url={socialMedia.sharingUrl}
-            title={socialMedia.linkedinTitle}
+        <SocialButtons>
+          <p>Let&apos;s get Social:</p>
+          <ButtonList>
+            <FacebookShareButton
+              quote={socialMedia.facebookShareTitle}
+              hashtag={socialMedia.facebookShareHashtag}
+              url={socialMedia.sharingUrl}
+            >
+              <FacebookIcon size={32} round={true} />
+            </FacebookShareButton>
+            <TwitterShareButton
+              url={socialMedia.sharingUrl}
+              title={socialMedia.twitterTitle}
+              via={socialMedia.twitterVia}
+            >
+              <TwitterIcon size={32} round={true} />
+            </TwitterShareButton>
+            <WhatsappShareButton
+              url={socialMedia.sharingUrl}
+              title={socialMedia.whatsappTitle}
+            >
+              <WhatsappIcon size={32} round={true} />
+            </WhatsappShareButton>
+            <LinkedinShareButton
+              url={socialMedia.sharingUrl}
+              title={socialMedia.linkedinTitle}
             // description={socialMedia.linkedinDescription}
-          >
-            <LinkedinIcon size={32} round={true} />
-          </LinkedinShareButton>
-          <EmailShareButton
-            url={socialMedia.sharingUrl}
-            subject={socialMedia.eMailSubject}
-            body={socialMedia.eMailBody}
-          >
-            <EmailIcon size={32} round={true} />
-          </EmailShareButton>
-        </ButtonList>
-      </SocialButtons>
+            >
+              <LinkedinIcon size={32} round={true} />
+            </LinkedinShareButton>
+            <EmailShareButton
+              url={socialMedia.sharingUrl}
+              subject={socialMedia.eMailSubject}
+              body={socialMedia.eMailBody}
+            >
+              <EmailIcon size={32} round={true} />
+            </EmailShareButton>
+          </ButtonList>
+        </SocialButtons>
 
-      <Badges>
-        <ul>
-          <li>
-            <a href={appStoreUrl} target="_blank">
-              <Image
-                alt="Download on the App Store"
-                height="40"
-                src={appStoreLogo}
-              />
-            </a>
-          </li>
-          <li>
-            <a href={macStoreUrl} target="_blank">
-              <Image
-                alt="Download on the Mac App Store"
-                height="40"
-                src={macStoreLogo}
-              />
-            </a>
-          </li>
-          <li>
-            <a href={playStoreUrl} target="_blank">
-              <Image
-                alt="Get it on Google Play"
-                height="40"
-                src={playStoreLogo}
-              />
-            </a>
-          </li>
-        </ul>
-      </Badges>
-      <Support>
-        <p>
-          Technical Problems? We&apos;re here to help! <br />
-          <Link href="mailto:support@pidro.net">Click here</Link>
-        </p>
-      </Support>
+        <Badges>
+          <ul>
+            <li>
+              <a href={appStoreUrl} target="_blank">
+                <Image
+                  alt="Download on the App Store"
+                  height="40"
+                  src={appStoreLogo}
+                />
+              </a>
+            </li>
+            <li>
+              <a href={macStoreUrl} target="_blank">
+                <Image
+                  alt="Download on the Mac App Store"
+                  height="40"
+                  src={macStoreLogo}
+                />
+              </a>
+            </li>
+            <li>
+              <a href={playStoreUrl} target="_blank">
+                <Image
+                  alt="Get it on Google Play"
+                  height="40"
+                  src={playStoreLogo}
+                />
+              </a>
+            </li>
+          </ul>
+        </Badges>
+        <Support>
+          <p>
+            Technical Problems? We&apos;re here to help! <br />
+            <Link href="mailto:support@pidro.net">Click here</Link>
+          </p>
+          <p>
+            Technical Problems? We&apos;re here to help! <br />
+            <Link href="/changelog">Changelog</Link>
+          </p>
+        </Support>
 
-      <Copyright>
-        <p>Oneapps &copy; 2016-{new Date().getFullYear()}</p>
-        <p>
-          <Link href="/privacy-policy">Privacy Policy</Link>
-          {` - `}
-          <Link href="/terms-of-use">Terms of Use</Link>
-          {` - `}
-          <br />
-          In-App Purchases:
-          {` - `}
-          <Link href="/in-app-purchases-ios-en">iOS (english)</Link>
-          {` - `}
-          <Link href="/in-app-purchases-ios-sv">iOS (swedish)</Link>
-          {` - `}
-          <Link href="/in-app-purchases-android-en">Android (english)</Link>
-          {` - `}
-          <Link href="/in-app-purchases-android-sv">Android (swedish)</Link>
-        </p>
-      </Copyright>
-    </SiteWrapper>
+        <Copyright>
+          <p>Oneapps &copy; 2016-{new Date().getFullYear()}</p>
+          <p>
+            <Link href="/privacy-policy">Privacy Policy</Link>
+            {` - `}
+            <Link href="/terms-of-use">Terms of Use</Link>
+            {` - `}
+            <br />
+            In-App Purchases:
+            {` - `}
+            <Link href="/in-app-purchases-ios-en">iOS (english)</Link>
+            {` - `}
+            <Link href="/in-app-purchases-ios-sv">iOS (swedish)</Link>
+            {` - `}
+            <Link href="/in-app-purchases-android-en">Android (english)</Link>
+            {` - `}
+            <Link href="/in-app-purchases-android-sv">Android (swedish)</Link>
+          </p>
+        </Copyright>
+      </SiteWrapper>
     </div>
   );
 }
