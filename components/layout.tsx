@@ -203,7 +203,7 @@ export function Layout({
             <Link href="mailto:support@pidro.net">Click here</Link>
           </p>
           <p>
-            Technical Problems? We&apos;re here to help! <br />
+            - <br />
             <Link href="/changelog">Changelog</Link>
           </p>
         </Support>
