@@ -28,12 +28,14 @@ const Content = styled.div`
     font-weight: bold;
     margin-top: 1.2em;
     margin-bottom: 0.8em;
+    color: #ffe230;
   }
   h4 {
     font-size: 1.1em;
     font-weight: bold;
     margin-top: 0.9em;
     margin-bottom: 0.6em;
+    color: #ffe230;
   }
   ul {
     list-style: disc;
@@ -108,12 +110,12 @@ export default function Page({
       <Head>{renderMetaTags(data.page.seo)}</Head>
       <Wrapper>
         <div className="prose prose-xl mx-auto">
-        <h2>{data.page.title}</h2>
-        <Content
-          dangerouslySetInnerHTML={{
-            __html: data.page.content,
-          }}
-        />
+          <h2>{data.page.title}</h2>
+          <Content
+            dangerouslySetInnerHTML={{
+              __html: data.page.content,
+            }}
+          />
         </div>
       </Wrapper>
     </Layout>
