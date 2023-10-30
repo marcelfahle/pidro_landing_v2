@@ -38,12 +38,19 @@ const SiteWrapper = styled.div`
     text-decoration: none;
     color: #ffe230;
   }
-  nav a {
+  nav a.ext {
     color: white;
+    color: #ffe230;
   }
   a:hover,
   a:active {
     color: #ffe230;
+  }
+  nav a {
+    color: white;
+    &:hover {
+      color: #ffe230;
+    }
   }
 `;
 
@@ -121,6 +128,46 @@ export function Layout({
   return (
     <div className={`${sanchez.className}`}>
       <SiteWrapper >
+        <nav className="bg-black py-3 flex justify-center">
+          <ul className="flex list-disc space-x-6 max-w-[960px]">
+            <li className="list-none">
+              <Link
+                className="text-white hover:text-[#ffe230]"
+                href="/how-to-play-pidro"
+              >
+                How to Play Pidro
+              </Link>
+            </li>
+            <li>
+              <Link className="text-white hover:text-[#ffe230]" href="/blog">
+                Blog
+              </Link>
+            </li>
+            <li>
+              <Link className="text-white hover:text-[#ffe230]" href="/changelog">
+                Changelog
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="text-white hover:text-[#ffe230]"
+                href="mailto:support@pidro.net"
+              >
+                Contact
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="ext hover:text-white"
+                href="https://pedrocardgame.com"
+                title="Pedro Card Game"
+                target="_blank"
+              >
+                Pedro Player?
+              </Link>
+            </li>
+          </ul>
+        </nav>
         <Header />
         <Content>
           <main className={`${sanchez.className}`}>{children}</main>

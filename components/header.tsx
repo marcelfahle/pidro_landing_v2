@@ -43,36 +43,6 @@ const HomeLink = styled(Link)`
 
 const Header = ({ }) => (
   <HeaderWrapper>
-    <nav className="absolute top-2 right-0 z-10">
-      <ul className="flex space-x-4">
-        <li>
-          <Link
-            className="text-white hover:text-[#ffe230]"
-            href="/how-to-play-pidro"
-          >
-            How to Play Pidro
-          </Link>
-        </li>
-        <li>
-          <Link className="text-white hover:text-[#ffe230]" href="/blog">
-            Blog
-          </Link>
-        </li>
-        <li>
-          <Link className="text-white hover:text-[#ffe230]" href="/changelog">
-            Changelog
-          </Link>
-        </li>
-        <li>
-          <Link
-            className="text-white hover:text-[#ffe230]"
-            href="mailto:support@pidro.net"
-          >
-            Contact
-          </Link>
-        </li>
-      </ul>
-    </nav>
     <h1 style={{ margin: 0 }}>
       <HomeLink href="/"> Pidro - back to home </HomeLink>
     </h1>
