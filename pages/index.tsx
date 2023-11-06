@@ -99,27 +99,13 @@ export default function Home({
       macStoreUrl={data.home.macStoreUrl}
     >
       <Head>{renderMetaTags(data.home.seo)}</Head>
-      <Headline>The free multiplayer card game</Headline>
+      <Headline>The free 4 player card game</Headline>
       <Subheadline>
         Test your skills, build alliances, and triumph in a captivating game of
         strategy.
       </Subheadline>
-      <Systems>
-        <br />
-        Out now for{" "}
-        <a href={data.home.appStoreUrl} target="_blank">
-          iOS
-        </a>
-        ,{" "}
-        <a href={data.home.macStoreUrl} target="_blank">
-          Mac{" "}
-        </a>
-        and{" "}
-        <a href={data.home.playStoreUrl} target="_blank">
-          Android
-        </a>
-        .
-      </Systems>
+
+
 
       <Badges>
         <ul>
