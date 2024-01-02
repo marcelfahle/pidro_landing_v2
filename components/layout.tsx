@@ -111,24 +111,26 @@ const Support = styled.div`
   text-align: center;
 `;
 type LayoutProps = {
-  socialMedia: any;
-  appStoreUrl: string;
-  macStoreUrl: string;
-  playStoreUrl: string;
+  socialMedia?: any;
+  appStoreUrl?: string;
+  macStoreUrl?: string;
+  playStoreUrl?: string;
+  barebones: boolean;
   children: ReactNode;
 };
 
 export function Layout({
   children,
-  socialMedia,
+  // socialMedia,
   appStoreUrl,
+  barebones = false,
   macStoreUrl,
   playStoreUrl,
 }: LayoutProps) {
   return (
     <div className={`${sanchez.className}`}>
       <SiteWrapper >
-        <nav className="bg-black py-3 flex justify-center">
+        {!barebones && <nav className="bg-black py-3 flex justify-center">
           <ul className="flex list-disc space-x-6 max-w-[960px]">
             <li className="list-none">
               <Link
@@ -167,55 +169,55 @@ export function Layout({
               </Link>
             </li>
           </ul>
-        </nav>
+        </nav>}
         <Header />
         <Content>
           <main className={`${sanchez.className}`}>{children}</main>
         </Content>
 
-        <SocialButtons>
-          <p>Let&apos;s get Social:</p>
-          <ButtonList>
-            <FacebookShareButton
-              quote={socialMedia.facebookShareTitle}
-              hashtag={socialMedia.facebookShareHashtag}
-              url={socialMedia.sharingUrl}
-            >
-              <FacebookIcon size={32} round={true} />
-            </FacebookShareButton>
-            <TwitterShareButton
-              url={socialMedia.sharingUrl}
-              title={socialMedia.twitterTitle}
-              via={socialMedia.twitterVia}
-            >
-              <TwitterIcon size={32} round={true} />
-            </TwitterShareButton>
-            <WhatsappShareButton
-              url={socialMedia.sharingUrl}
-              title={socialMedia.whatsappTitle}
-            >
-              <WhatsappIcon size={32} round={true} />
-            </WhatsappShareButton>
-            <LinkedinShareButton
-              url={socialMedia.sharingUrl}
-              title={socialMedia.linkedinTitle}
-            // description={socialMedia.linkedinDescription}
-            >
-              <LinkedinIcon size={32} round={true} />
-            </LinkedinShareButton>
-            <EmailShareButton
-              url={socialMedia.sharingUrl}
-              subject={socialMedia.eMailSubject}
-              body={socialMedia.eMailBody}
-            >
-              <EmailIcon size={32} round={true} />
-            </EmailShareButton>
-          </ButtonList>
-        </SocialButtons>
+        {/* <SocialButtons> */}
+        {/*   <p>Let&apos;s get Social:</p> */}
+        {/*   <ButtonList> */}
+        {/*     <FacebookShareButton */}
+        {/*       quote={socialMedia.facebookShareTitle} */}
+        {/*       hashtag={socialMedia.facebookShareHashtag} */}
+        {/*       url={socialMedia.sharingUrl} */}
+        {/*     > */}
+        {/*       <FacebookIcon size={32} round={true} /> */}
+        {/*     </FacebookShareButton> */}
+        {/*     <TwitterShareButton */}
+        {/*       url={socialMedia.sharingUrl} */}
+        {/*       title={socialMedia.twitterTitle} */}
+        {/*       via={socialMedia.twitterVia} */}
+        {/*     > */}
+        {/*       <TwitterIcon size={32} round={true} /> */}
+        {/*     </TwitterShareButton> */}
+        {/*     <WhatsappShareButton */}
+        {/*       url={socialMedia.sharingUrl} */}
+        {/*       title={socialMedia.whatsappTitle} */}
+        {/*     > */}
+        {/*       <WhatsappIcon size={32} round={true} /> */}
+        {/*     </WhatsappShareButton> */}
+        {/*     <LinkedinShareButton */}
+        {/*       url={socialMedia.sharingUrl} */}
+        {/*       title={socialMedia.linkedinTitle} */}
+        {/*     // description={socialMedia.linkedinDescription} */}
+        {/*     > */}
+        {/*       <LinkedinIcon size={32} round={true} /> */}
+        {/*     </LinkedinShareButton> */}
+        {/*     <EmailShareButton */}
+        {/*       url={socialMedia.sharingUrl} */}
+        {/*       subject={socialMedia.eMailSubject} */}
+        {/*       body={socialMedia.eMailBody} */}
+        {/*     > */}
+        {/*       <EmailIcon size={32} round={true} /> */}
+        {/*     </EmailShareButton> */}
+        {/*   </ButtonList> */}
+        {/* </SocialButtons> */}
 
         <Badges>
           <ul>
-            <li>
+            {appStoreUrl && <li>
               <a href={appStoreUrl} target="_blank">
                 <Image
                   alt="Download on the App Store"
@@ -223,8 +225,8 @@ export function Layout({
                   src={appStoreLogo}
                 />
               </a>
-            </li>
-            <li>
+            </li>}
+            {macStoreUrl && <li>
               <a href={macStoreUrl} target="_blank">
                 <Image
                   alt="Download on the Mac App Store"
@@ -232,8 +234,8 @@ export function Layout({
                   src={macStoreLogo}
                 />
               </a>
-            </li>
-            <li>
+            </li>}
+            {playStoreUrl && <li>
               <a href={playStoreUrl} target="_blank">
                 <Image
                   alt="Get it on Google Play"
@@ -241,7 +243,7 @@ export function Layout({
                   src={playStoreLogo}
                 />
               </a>
-            </li>
+            </li>}
           </ul>
         </Badges>
         <Support>
@@ -257,7 +259,8 @@ export function Layout({
 
         <Copyright>
           <p>Oneapps &copy; 2016-{new Date().getFullYear()}</p>
-          <p>
+
+          {!barebones && <p>
             <Link href="/privacy-policy">Privacy Policy</Link>
             {` - `}
             <Link href="/terms-of-use">Terms of Use</Link>
@@ -272,7 +275,7 @@ export function Layout({
             <Link href="/in-app-purchases-android-en">Android (english)</Link>
             {` - `}
             <Link href="/in-app-purchases-android-sv">Android (swedish)</Link>
-          </p>
+          </p>}
         </Copyright>
       </SiteWrapper>
     </div>

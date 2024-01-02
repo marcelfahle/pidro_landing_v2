@@ -1,5 +1,6 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/router';
+import { Layout } from '@/components/layout';
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -69,34 +70,37 @@ export default function ResetPassword() {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="newPassword">New Password:</label>
-          <input
-            className="text-black"
-            type="password"
-            id="newPassword"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="confirmPassword">Confirm New Password:</label>
-          <input
-            className="text-black"
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-        <button type="submit">Reset Password</button>
-      </form>
-    </div>
+    <Layout barebones={true}>
+      <div className="flex flex-col relative z-50 prose">
+        <p className='mb-4 strong'><strong>Here you can set a new password:</strong> </p>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label htmlFor="newPassword" className="block">New Password:</label>
+            <input
+              className="text-black text-xl px-2 py-0.5"
+              type="password"
+              id="newPassword"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className='mb-6'>
+            <label htmlFor="confirmPassword">Confirm New Password:</label>
+            <input
+              className="text-black text-xl px-2 py-0.5"
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+          {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          <button type="submit" className="rounded-md bg-white/10 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20">Reset Password</button>
+        </form>
+      </div>
+    </Layout>
   );
 }
 
