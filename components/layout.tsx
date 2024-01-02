@@ -115,7 +115,7 @@ type LayoutProps = {
   appStoreUrl?: string;
   macStoreUrl?: string;
   playStoreUrl?: string;
-  barebones: boolean;
+  barebones?: boolean;
   children: ReactNode;
 };
 
