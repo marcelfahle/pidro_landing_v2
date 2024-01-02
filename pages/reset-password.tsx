@@ -8,6 +8,7 @@ export default function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isSuccess, setIsSuccess] = useState<boolean>(false)
 
   useEffect(() => {
     const tokenParam = router.query.token;
@@ -47,6 +48,7 @@ export default function ResetPassword() {
 
       if (response.ok) {
         // Handle successful password reset (e.g., redirect to login page)
+        setIsSuccess(true)
       } else {
         // Handle error
         const errorData = await response.json();
@@ -58,6 +60,10 @@ export default function ResetPassword() {
   };
 
 
+  if (isSuccess) {
+    return <p>Password Reset Successful</p>
+  }
+
   if (!isValidToken) {
     return <p>Invalid or expired token.</p>;
   }
@@ -68,6 +74,7 @@ export default function ResetPassword() {
         <div>
           <label htmlFor="newPassword">New Password:</label>
           <input
+            className="text-black"
             type="password"
             id="newPassword"
             value={newPassword}
@@ -78,6 +85,7 @@ export default function ResetPassword() {
         <div>
           <label htmlFor="confirmPassword">Confirm New Password:</label>
           <input
+            className="text-black"
             type="password"
             id="confirmPassword"
             value={confirmPassword}
