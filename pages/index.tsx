@@ -162,7 +162,9 @@ export default function Home({
                   {data &&
                     data.home.screenshots &&
                     data.home.screenshots.map((s: { url: string }) => (
-                      <img key={s.url} src={s.url} />
+                      <div className="h-full aspect-video">
+                        <Image alt="Pidro Screenshot" fill={true} style={{ objectFit: 'contain' }} key={s.url} src={s.url} />
+                      </div>
                     ))}
                 </ReactSwipe>
               </div>
