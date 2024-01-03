@@ -10,6 +10,8 @@ export default function ResetPassword() {
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isSuccess, setIsSuccess] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
 
   useEffect(() => {
     const tokenParam = router.query.token;
@@ -19,6 +21,8 @@ export default function ResetPassword() {
     if (token) {
       setToken(token);
       validateToken(token);
+    } else {
+      setIsLoading(false);
     }
   }, [router.query.token]);
 
@@ -30,6 +34,7 @@ export default function ResetPassword() {
     });
     const data = await response.json();
     setIsValidToken(data.valid);
+    setIsLoading(false);
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -60,13 +65,24 @@ export default function ResetPassword() {
     }
   };
 
+  if (isLoading) {
+    return <Layout barebones={true}>
+      <p className='mb-4 strong text-center'>Loading</p>
+    </Layout>;
+  }
 
   if (isSuccess) {
-    return <p>Password Reset Successful</p>
+    return <Layout barebones={true}>
+      <p className='mb-4 strong text-center'>Password Reset Successful!</p>
+      <p>You can now switch back to the Pidro app and use your new credentials.</p>
+    </Layout>;
   }
 
   if (!isValidToken) {
-    return <p>Invalid or expired token.</p>;
+    return <Layout barebones={true}>
+      <p className='mb-4 strong text-center'>Invalid Link</p>
+      <p>The Link to renew your password is either invalid or has expired. Please use the "Forgot Credentials?" button in the Pidro App to request a new link.</p>
+    </Layout>;
   }
 
   return (
