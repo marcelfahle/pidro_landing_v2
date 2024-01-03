@@ -81,7 +81,7 @@ export default function ResetPassword() {
   if (!isValidToken) {
     return <Layout barebones={true}>
       <p className='mb-4 strong text-center'>Invalid Link</p>
-      <p>The Link to renew your password is either invalid or has expired. Please use the "Forgot Credentials?" button in the Pidro App to request a new link.</p>
+      <p>The Link to renew your password is either invalid or has expired. Please use the &quot;Forgot Credentials?&quot; button in the Pidro App to request a new link.</p>
     </Layout>;
   }
 
