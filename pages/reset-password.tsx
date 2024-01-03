@@ -65,16 +65,16 @@ export default function ResetPassword() {
     }
   };
 
-  if (isLoading) {
-    return <Layout barebones={true}>
-      <p className='mb-4 strong text-center'>Loading</p>
-    </Layout>;
-  }
-
   if (isSuccess) {
     return <Layout barebones={true}>
       <p className='mb-4 strong text-center'>Password Reset Successful!</p>
       <p>You can now switch back to the Pidro app and use your new credentials.</p>
+    </Layout>;
+  }
+
+  if (isLoading) {
+    return <Layout barebones={true}>
+      <p className='mb-4 strong text-center'>Loading</p>
     </Layout>;
   }
 
