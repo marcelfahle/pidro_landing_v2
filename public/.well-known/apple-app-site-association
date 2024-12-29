@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "LSFK7YF82G.com.oneapps.pidro",
+        "paths": ["/app/*"]
+      }
+    ]
+  }
+}
