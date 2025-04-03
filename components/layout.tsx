@@ -129,47 +129,42 @@ export function Layout({
 }: LayoutProps) {
   return (
     <div className={`${sanchez.className}`}>
-      <SiteWrapper >
-        {!barebones && <nav className="bg-black py-3 flex justify-center">
-          <ul className="flex list-disc space-x-6 max-w-[960px]">
-            <li className="list-none">
-              <Link
-                className="text-white hover:text-[#ffe230]"
-                href="/how-to-play-pidro"
-              >
-                How to Play Pidro
-              </Link>
-            </li>
-            <li>
-              <Link className="text-white hover:text-[#ffe230]" href="/blog">
-                Blog
-              </Link>
-            </li>
-            <li>
-              <Link className="text-white hover:text-[#ffe230]" href="/changelog">
-                Changelog
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="text-white hover:text-[#ffe230]"
-                href="mailto:support@pidro.net"
-              >
-                Contact
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="ext hover:text-white"
-                href="https://pedrocardgame.com"
-                title="Pedro Card Game"
-                target="_blank"
-              >
-                Pedro Player?
-              </Link>
-            </li>
-          </ul>
-        </nav>}
+      <SiteWrapper>
+        {!barebones && (
+          <nav className="bg-black py-3 flex justify-center">
+            <ul className="flex list-disc space-x-6 max-w-[960px]">
+              <li className="list-none">
+                <Link
+                  className="text-white hover:text-[#ffe230]"
+                  href="/how-to-play-pidro"
+                >
+                  How to Play Pidro
+                </Link>
+              </li>
+              <li>
+                <Link className="text-white hover:text-[#ffe230]" href="/blog">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="text-white hover:text-[#ffe230]"
+                  href="/changelog"
+                >
+                  Changelog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="text-white hover:text-[#ffe230]"
+                  href="mailto:pidrohelp@gmail.com"
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        )}
         <Header />
         <Content>
           <main className={`${sanchez.className}`}>{children}</main>
@@ -217,39 +212,45 @@ export function Layout({
 
         <Badges>
           <ul>
-            {appStoreUrl && <li>
-              <a href={appStoreUrl} target="_blank">
-                <Image
-                  alt="Download on the App Store"
-                  height="40"
-                  src={appStoreLogo}
-                />
-              </a>
-            </li>}
-            {macStoreUrl && <li>
-              <a href={macStoreUrl} target="_blank">
-                <Image
-                  alt="Download on the Mac App Store"
-                  height="40"
-                  src={macStoreLogo}
-                />
-              </a>
-            </li>}
-            {playStoreUrl && <li>
-              <a href={playStoreUrl} target="_blank">
-                <Image
-                  alt="Get it on Google Play"
-                  height="40"
-                  src={playStoreLogo}
-                />
-              </a>
-            </li>}
+            {appStoreUrl && (
+              <li>
+                <a href={appStoreUrl} target="_blank">
+                  <Image
+                    alt="Download on the App Store"
+                    height="40"
+                    src={appStoreLogo}
+                  />
+                </a>
+              </li>
+            )}
+            {macStoreUrl && (
+              <li>
+                <a href={macStoreUrl} target="_blank">
+                  <Image
+                    alt="Download on the Mac App Store"
+                    height="40"
+                    src={macStoreLogo}
+                  />
+                </a>
+              </li>
+            )}
+            {playStoreUrl && (
+              <li>
+                <a href={playStoreUrl} target="_blank">
+                  <Image
+                    alt="Get it on Google Play"
+                    height="40"
+                    src={playStoreLogo}
+                  />
+                </a>
+              </li>
+            )}
           </ul>
         </Badges>
         <Support>
           <p>
             Technical Problems? We&apos;re here to help! <br />
-            <Link href="mailto:support@pidro.net">Click here</Link>
+            <Link href="mailto:pidrohelp@gmail.com">Click here</Link>
           </p>
           <p>
             - <br />
@@ -260,22 +261,24 @@ export function Layout({
         <Copyright>
           <p>Oneapps &copy; 2016-{new Date().getFullYear()}</p>
 
-          {!barebones && <p>
-            <Link href="/privacy-policy">Privacy Policy</Link>
-            {` - `}
-            <Link href="/terms-of-use">Terms of Use</Link>
-            {` - `}
-            <br />
-            In-App Purchases:
-            {` - `}
-            <Link href="/in-app-purchases-ios-en">iOS (english)</Link>
-            {` - `}
-            <Link href="/in-app-purchases-ios-sv">iOS (swedish)</Link>
-            {` - `}
-            <Link href="/in-app-purchases-android-en">Android (english)</Link>
-            {` - `}
-            <Link href="/in-app-purchases-android-sv">Android (swedish)</Link>
-          </p>}
+          {!barebones && (
+            <p>
+              <Link href="/privacy-policy">Privacy Policy</Link>
+              {` - `}
+              <Link href="/terms-of-use">Terms of Use</Link>
+              {` - `}
+              <br />
+              In-App Purchases:
+              {` - `}
+              <Link href="/in-app-purchases-ios-en">iOS (english)</Link>
+              {` - `}
+              <Link href="/in-app-purchases-ios-sv">iOS (swedish)</Link>
+              {` - `}
+              <Link href="/in-app-purchases-android-en">Android (english)</Link>
+              {` - `}
+              <Link href="/in-app-purchases-android-sv">Android (swedish)</Link>
+            </p>
+          )}
         </Copyright>
       </SiteWrapper>
     </div>
