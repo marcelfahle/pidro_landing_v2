@@ -47,9 +47,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const page = await getPageData(params.slug);
+  const { slug } = await params;
+  const page = await getPageData(slug);
 
   if (!page) {
     // Handle case where page is not found, perhaps return default metadata or throw an error
@@ -63,8 +64,16 @@ export async function generateMetadata({
 
 // --- Page Component (Server Component) ---
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const page = await getPageData(params.slug);
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  // Await the params object as per Next.js 15 changes
+  const { slug } = await params;
+
+  // Use the resolved slug to fetch data
+  const page = await getPageData(slug);
 
   if (!page) {
     // Optional: Render a specific not-found component or redirect

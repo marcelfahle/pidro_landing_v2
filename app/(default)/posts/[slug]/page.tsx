@@ -53,9 +53,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const post = await getPostData(params.slug);
+  const { slug } = await params;
+  const post = await getPostData(slug);
 
   if (!post) {
     notFound();
@@ -69,9 +70,13 @@ export async function generateMetadata({
 export default async function PostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const post = await getPostData(params.slug);
+  // Await the params object as per Next.js 15 changes
+  const { slug } = await params;
+
+  // Use the resolved slug to fetch data
+  const post = await getPostData(slug);
 
   if (!post || !post.content) {
     notFound();

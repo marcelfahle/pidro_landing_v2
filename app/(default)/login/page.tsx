@@ -1,54 +1,88 @@
-"use client";
+import { signIn } from "@/auth"; // Assuming signIn is exported from here
+import { redirect } from "next/navigation";
+import { AuthError } from "next-auth";
+import LoginForm from "./LoginForm"; // Import the new client component
 
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function LoginPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/profile";
-  const initialError = searchParams.get("error");
+// Define error messages for known error codes
+const errorMessages: { [key: string]: string } = {
+  CredentialsSignin: "Invalid username or password. Please try again.",
+  AuthenticationError: "Authentication failed. Please check logs.", // Added more specific error
+  UnknownError: "An unexpected error occurred during login.",
+  MissingCredentials: "Please enter both username and password.", // Added
+  // Add other specific error codes from NextAuth if needed
+};
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(initialError || "");
-  const [isLoading, setIsLoading] = useState(false);
+// Define success messages
+const successMessages: { [key: string]: string } = {
+  password_reset_success:
+    "Password reset successful! You can now log in with your new password.",
+};
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setIsLoading(true);
-    setError("");
+export default async function LoginPage({
+  searchParams,
+}: {
+  // Update the type to be a Promise wrapping the object
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  // Await the searchParams promise before accessing it
+  const resolvedSearchParams = await searchParams;
+  const errorKey = resolvedSearchParams?.error as string | undefined;
+  const messageKey = resolvedSearchParams?.message as string | undefined; // Read message key
+
+  // Determine which message to display (prioritize error?)
+  const displayError = errorKey
+    ? errorMessages[errorKey] || errorMessages.UnknownError
+    : undefined;
+  const displayMessage =
+    !displayError && messageKey ? successMessages[messageKey] : undefined; // Show message only if no error
+
+  async function loginAction(formData: FormData) {
+    "use server"; // Mark this as a Server Action
+
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+
+    if (!username || !password) {
+      // Basic validation, though HTML 'required' should handle most cases
+      redirect("/login?error=MissingCredentials"); // Use specific error key
+      return;
+    }
 
     try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        username: username,
-        password: password,
-        callbackUrl: callbackUrl,
+      // Attempt sign in using server-side signIn
+      await signIn("credentials", {
+        username,
+        password,
+        redirectTo: "/profile", // Specify the redirect path on success
       });
-
-      if (result?.error) {
-        if (result.error === "CredentialsSignin") {
-          setError("Invalid username or password. Please try again.");
-        } else {
-          setError(result.error || "Login failed with an unknown error.");
+      // If signIn doesn't throw and doesn't redirect automatically (depends on config),
+      // redirect manually. However, `redirectTo` should handle this.
+      // redirect('/profile'); // Usually not needed if redirectTo is set
+    } catch (error) {
+      // If it's an AuthError, handle specific cases and redirect
+      if (error instanceof AuthError) {
+        switch (error.type) {
+          case "CredentialsSignin":
+            return redirect("/login?error=CredentialsSignin");
+          // Add cases for other specific AuthErrors you want to handle differently
+          default:
+            console.error("Unhandled Authentication Error:", error);
+            return redirect("/login?error=AuthenticationError"); // Generic auth error
         }
-        setIsLoading(false);
-      } else if (result?.ok) {
-        console.log("Sign-in successful, redirecting...");
-        router.push(callbackUrl);
-        router.refresh();
-      } else {
-        setError("An unexpected error occurred during login.");
-        setIsLoading(false);
       }
-    } catch (err) {
-      console.error("Login Submit Error:", err);
-      setError("An unexpected error occurred. Please try again later.");
-      setIsLoading(false);
+
+      // If it's the special redirect error, re-throw it so Next.js handles it
+      if ((error as any)?.digest?.startsWith("NEXT_REDIRECT")) {
+        throw error;
+      }
+
+      // Otherwise, it's an unexpected server error
+      console.error("Unexpected Login Action Error:", error);
+      // Redirect to login with a generic unknown error
+      redirect("/login?error=UnknownError");
     }
   }
 
@@ -58,79 +92,16 @@ export default function LoginPage() {
         Player Sign In
       </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-5 w-full">
-        <div>
-          <label
-            htmlFor="username"
-            className="block text-sm font-medium mb-1 text-gray-300"
-          >
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            required
-            autoComplete="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 bg-white/5 border border-white/20 rounded-md text-sm shadow-sm placeholder-gray-400 text-white
-              focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
-            aria-describedby={error ? "error-message" : undefined}
-            disabled={isLoading}
-          />
-        </div>
+      {/* Display Success Message if present */}
+      {displayMessage && (
+        <p className="text-green-400 text-sm font-medium mb-4 text-center">
+          {displayMessage}
+        </p>
+      )}
 
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium mb-1 text-gray-300"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 bg-white/5 border border-white/20 rounded-md text-sm shadow-sm placeholder-gray-400 text-white
-              focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
-            aria-describedby={error ? "error-message" : undefined}
-            disabled={isLoading}
-          />
-          <div className="text-right">
-            <Link
-              href="/reset-password"
-              className="text-xs text-gray-400 hover:text-accent hover:underline"
-            >
-              Forgot password?
-            </Link>
-          </div>
-        </div>
-
-        {error && (
-          <p
-            id="error-message"
-            className="text-red-400 text-sm font-medium pt-1"
-          >
-            {error}
-          </p>
-        )}
-
-        <Button
-          type="submit"
-          variant="glass"
-          size="lg"
-          className="w-full mt-2"
-          loading={isLoading}
-          disabled={isLoading}
-        >
-          Sign In
-        </Button>
-      </form>
+      {/* Render the LoginForm client component, pass the error message */}
+      {/* Note: We display the error inside the LoginForm now */}
+      <LoginForm loginAction={loginAction} errorMessage={displayError} />
     </div>
   );
 }

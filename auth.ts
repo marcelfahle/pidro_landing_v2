@@ -162,7 +162,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (!response.ok || data.error || !data.data?.user_id) {
             const errorMessage = data.message || "Authentication failed";
             console.error("Portal sign-in failed (logic check):", errorMessage);
-            throw new Error(errorMessage);
+            // throw new Error(errorMessage);
+            return null; // Return null for credential errors, NextAuth will handle it
           }
 
           console.log("Portal sign-in successful for user:", data.data.user_id);

@@ -1,410 +1,338 @@
-"use client";
+import { redirect } from "next/navigation";
+import RequestResetLinkForm from "./RequestResetLinkForm";
+import ResetPasswordForm from "./ResetPasswordForm";
 
-import { useState, useEffect, FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
+// --- Server-Side Utilities (Placeholders) ---
+// Replace these with your actual server-side logic imports/implementations
+async function validateResetTokenOnServer(token: string): Promise<boolean> {
+  console.log("Server: Validating token via API call:", token);
 
-export default function ResetPasswordPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  // Construct the absolute URL for the API endpoint
+  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"; // Fallback for local dev
+  const apiUrl = `${baseUrl}/api/validate-reset-token`;
 
-  // State for view mode: 'email' or 'password'
-  const [viewMode, setViewMode] = useState<"email" | "password">("email");
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }), // Send token in the body
+    });
 
-  // State for the token itself
-  const [token, setToken] = useState<string | null>(null);
-
-  // State specifically for the email form
-  const [email, setEmail] = useState<string>("");
-  const [isEmailLoading, setIsEmailLoading] = useState<boolean>(false);
-  const [emailMessage, setEmailMessage] = useState<string>(""); // Separate message for email form
-  const [emailMessageType, setEmailMessageType] = useState<
-    "error" | "success" | "info"
-  >("info");
-
-  // State specifically for the password form
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [isPasswordLoading, setIsPasswordLoading] = useState<boolean>(false);
-  const [passwordMessage, setPasswordMessage] = useState<string>(""); // Separate message for password form
-  const [passwordMessageType, setPasswordMessageType] = useState<
-    "error" | "success" | "info"
-  >("info");
-  const [passwordErrors, setPasswordErrors] = useState<string[]>([]); // For inline password validation
-
-  // General state
-  const [isValidToken, setIsValidToken] = useState<boolean | null>(null); // null initially, true/false after check
-  const [initialCheckLoading, setInitialCheckLoading] = useState<boolean>(true); // Loading for initial token check
-  const [tokenErrorMessage, setTokenErrorMessage] = useState<string>(""); // Error specifically from invalid token
-
-  useEffect(() => {
-    if (!searchParams) return;
-
-    const tokenParam = searchParams.get("token");
-    if (tokenParam) {
-      setToken(tokenParam);
-      validateToken(tokenParam); // This will set viewMode and isValidToken
-    } else {
-      // No token found, show email form
-      setViewMode("email");
-      setIsValidToken(null); // No token to be valid/invalid
-      setInitialCheckLoading(false);
+    if (!response.ok) {
+      // If API returns non-2xx status, treat token as invalid
+      console.error(
+        `Server: Token validation API call failed (${response.status})`,
+      );
+      // Optionally parse response body for more specific error message if needed
+      // For simplicity, we just return false or throw
+      // throw new Error(`Token validation failed with status: ${response.status}`);
+      return false; // Treat non-ok response as invalid token
     }
-  }, [searchParams]);
 
-  const validateToken = async (tokenToValidate: string) => {
-    setInitialCheckLoading(true);
-    setTokenErrorMessage(""); // Clear previous token error
+    const data = await response.json();
+    console.log("Server: Token validation API response:", data);
+
+    // Check for the expected 'valid' property in the response
+    if (typeof data.valid === "boolean") {
+      return data.valid;
+    }
+
+    // If response format is unexpected, treat as invalid
+    console.error(
+      "Server: Unexpected response format from token validation API.",
+    );
+    return false;
+  } catch (error) {
+    console.error(
+      "Server: Network or fetch error during token validation:",
+      error,
+    );
+    // Re-throw the error so the calling code knows something went wrong
+    // The calling code will set initialTokenErrorKey = 'token_validation_failed'
+    throw new Error(
+      "Could not validate the reset link due to a network or server error.",
+    );
+  }
+}
+
+async function requestPasswordResetLink(email: string): Promise<void> {
+  console.log("Server: Requesting reset link for:", email);
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  if (!apiBaseUrl) {
+    console.error("Missing NEXT_PUBLIC_API_BASE_URL");
+    throw new Error("API configuration error."); // Let the action catch this
+  }
+  const url = `${apiBaseUrl}/v3/reset_password?Email=${encodeURIComponent(email)}`;
+  const response = await fetch(url, { method: "GET" });
+  console.log("Server: Request Password Reset API Status:", response.status);
+  // Handle non-OK status appropriately - throw an error for the action to catch?
+  if (!response.ok && response.status !== 400) {
+    // Treat 400 (not found) as success for security
+    // Attempt to parse error, but throw a generic one if needed
     try {
-      const response = await fetch("/api/validate-reset-token", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: tokenToValidate }),
-      });
-      const data = await response.json();
-      if (data.valid) {
-        setIsValidToken(true);
-        setViewMode("password"); // Token valid, show password form
-      } else {
-        setIsValidToken(false);
-        setViewMode("email"); // Token invalid, show email form
-        setTokenErrorMessage(
-          "This password reset link is invalid or has expired. Please request a new one below.",
+      const errorData = await response.json();
+      console.error("Server: API Error Data:", errorData);
+      throw new Error(errorData.message || "Failed to send reset link.");
+    } catch (e) {
+      throw new Error("Failed to send reset link due to server error.");
+    }
+  }
+  // If OK or 400, we proceed as if successful in the action's redirect
+}
+
+async function resetPasswordWithToken(
+  token: string,
+  newPassword: string,
+): Promise<void> {
+  console.log("Server: Attempting password reset with token:", token);
+
+  // Construct the absolute URL for the API endpoint
+  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"; // Fallback for local dev
+  const apiUrl = `${baseUrl}/api/reset-password`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, newPassword }),
+    });
+
+    if (!response.ok) {
+      let errorMessage = "Error resetting password.";
+      try {
+        // Attempt to parse error message from API response
+        const data = await response.json();
+        errorMessage = data.message || errorMessage;
+      } catch (parseError) {
+        // Ignore if response body isn't valid JSON or empty
+        console.error(
+          "Server: Could not parse error response from API:",
+          parseError,
         );
       }
-    } catch (error) {
-      console.error("Token validation error:", error);
-      setIsValidToken(false);
-      setViewMode("email"); // Network or other error, show email form
-      setTokenErrorMessage(
-        "Could not validate the reset link. Please try again.",
+      console.error(
+        `Server: API call failed (${response.status}): ${errorMessage}`,
       );
+      // Throw an error to be caught by the Server Action
+      throw new Error(errorMessage);
     }
-    setInitialCheckLoading(false);
-  };
 
-  const validatePassword = (password: string): string[] => {
-    const errors: string[] = [];
-    if (password.length < 6) {
-      errors.push("Password must be at least 6 characters long.");
+    // If response.ok, the password reset was successful
+    console.log("Server: Password reset successful via API.");
+    // No need to return anything or redirect here; the Server Action handles it.
+  } catch (error) {
+    console.error(
+      "Server: Network or fetch error during password reset:",
+      error,
+    );
+    // Re-throw the error or throw a new one for the Server Action
+    throw new Error("An unexpected error occurred during password reset.");
+  }
+}
+
+// --- Basic Password Validation (Server-Side) ---
+function validatePasswordServer(password: string): string | null {
+  if (password.length < 6) {
+    return "password_too_short";
+  }
+  // Add same rules as client-side if needed
+  return null; // No error
+}
+
+// --- Message & Error Lookups ---
+const messages: { [key: string]: string } = {
+  reset_link_sent:
+    "If an account exists for this email, a password reset link has been sent.",
+  // Password reset success message is handled by redirecting to login
+};
+
+const errors: { [key: string]: string } = {
+  invalid_token:
+    "This password reset link is invalid or has expired. Please request a new one below.",
+  token_validation_failed:
+    "Could not validate the reset link. Please try again.",
+  missing_email: "Please enter your email address.",
+  api_error: "Failed to send reset link. Please try again later.",
+  missing_token: "Reset token is missing. Please use the link from your email.",
+  password_mismatch: "Passwords do not match.",
+  password_too_short: "Password must be at least 6 characters long.",
+  reset_failed: "Error resetting password. Please try again.",
+  unknown_error: "An unexpected error occurred.",
+};
+
+// --- The Server Component ---
+export default async function ResetPasswordPage({
+  searchParams,
+}: {
+  // Updated searchParams type for Next.js 15+
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const resolvedSearchParams = (await searchParams) ?? {}; // Handle potential undefined promise
+  const token = resolvedSearchParams?.token as string | undefined;
+  const messageKey = resolvedSearchParams?.message as string | undefined;
+  const errorKey = resolvedSearchParams?.error as string | undefined;
+
+  let viewMode: "email" | "password" = "email";
+  let initialTokenErrorKey: string | undefined;
+  let isValidToken = false;
+
+  // --- Server-Side Token Validation ---
+  if (token) {
+    try {
+      isValidToken = await validateResetTokenOnServer(token);
+      if (isValidToken) {
+        viewMode = "password";
+      } else {
+        initialTokenErrorKey = "invalid_token";
+        viewMode = "email"; // Stay on email form if token invalid
+      }
+    } catch (err) {
+      console.error("Server: Token validation error:", err);
+      initialTokenErrorKey = "token_validation_failed";
+      viewMode = "email";
     }
-    // Add more rules if needed
-    return errors;
-  };
+  }
 
-  // Renamed handleSubmit to handlePasswordSubmit
-  const handlePasswordSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setPasswordMessage(""); // Clear previous password message
-    setPasswordErrors([]);
+  const displayMessage = messageKey ? messages[messageKey] : undefined;
+  // Prioritize token error over other errors if token was present but invalid
+  const displayError = initialTokenErrorKey
+    ? errors[initialTokenErrorKey]
+    : errorKey
+      ? errors[errorKey]
+      : undefined;
 
-    const validationErrors = validatePassword(newPassword);
-    if (validationErrors.length > 0) {
-      setPasswordErrors(validationErrors);
+  // --- Server Action: Request Reset Link ---
+  async function requestResetLinkAction(formData: FormData) {
+    "use server";
+    const email = formData.get("email") as string;
+
+    if (!email) {
+      redirect("/reset-password?error=missing_email");
+    }
+
+    try {
+      await requestPasswordResetLink(email);
+      // Treat 400 "Email not found" from API as success for security
+      redirect("/reset-password?message=reset_link_sent");
+    } catch (error) {
+      // If it's the special redirect error, re-throw it so Next.js handles it
+      if ((error as any)?.digest?.startsWith("NEXT_REDIRECT")) {
+        throw error;
+      }
+
+      // Otherwise, it's an unexpected server error from requestPasswordResetLink
+      console.error("Server Action: Request password reset error:", error);
+      // Redirect with a generic error
+      redirect("/reset-password?error=api_error"); // Simplified error handling
+    }
+  }
+
+  // --- Server Action: Reset Password ---
+  async function resetPasswordAction(formData: FormData) {
+    "use server";
+    const newPassword = formData.get("newPassword") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
+    const resetToken = formData.get("token") as string; // From hidden input
+
+    if (!resetToken) {
+      redirect("/reset-password?error=missing_token");
+      return;
+    }
+
+    // Re-validate token server-side before attempting reset
+    try {
+      const isTokenStillValid = await validateResetTokenOnServer(resetToken);
+      if (!isTokenStillValid) {
+        redirect("/reset-password?error=invalid_token");
+        return;
+      }
+    } catch (err) {
+      redirect(
+        `/reset-password?token=${resetToken}&error=token_validation_failed`,
+      );
+      return;
+    }
+
+    const passwordValidationErrorKey = validatePasswordServer(newPassword);
+    if (passwordValidationErrorKey) {
+      redirect(
+        `/reset-password?token=${resetToken}&error=${passwordValidationErrorKey}`,
+      );
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setPasswordMessage("Passwords do not match.");
-      setPasswordMessageType("error");
+      redirect(`/reset-password?token=${resetToken}&error=password_mismatch`);
       return;
     }
 
-    if (!token) {
-      setPasswordMessage("Missing reset token."); // Should not happen if viewMode is 'password'
-      setPasswordMessageType("error");
-      return;
-    }
-
-    setIsPasswordLoading(true);
     try {
-      const response = await fetch("/api/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, newPassword }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setPasswordMessage(
-          "Password reset successful! You can now log in with your new password.",
-        );
-        setPasswordMessageType("success");
-        // Consider redirecting or disabling the form further
-      } else {
-        setPasswordMessage(
-          data.message || "Error resetting password. Please try again.",
-        );
-        setPasswordMessageType("error");
-      }
+      await resetPasswordWithToken(resetToken, newPassword);
+      // Redirect to login page with a success message indicator
+      redirect("/login?message=password_reset_success"); // Adjust if your login page handles this
     } catch (error) {
-      console.error("Password reset submit error:", error);
-      setPasswordMessage(
-        "An unexpected error occurred. Please try again later.",
-      );
-      setPasswordMessageType("error");
-    }
-    setIsPasswordLoading(false);
-  };
-
-  // ADD NEW HANDLER for Email Form Submission
-  const handleEmailSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setEmailMessage("");
-    if (!email) {
-      setEmailMessage("Please enter your email address.");
-      setEmailMessageType("error");
-      return;
-    }
-
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-    if (!apiBaseUrl) {
-      setEmailMessage("API configuration error. Please contact support.");
-      setEmailMessageType("error");
-      console.error("Missing NEXT_PUBLIC_API_BASE_URL");
-      return;
-    }
-
-    setIsEmailLoading(true);
-    try {
-      // Construct the GET request URL with email as query parameter
-      const url = `${apiBaseUrl}/v3/reset_password?Email=${encodeURIComponent(email)}`;
-      console.log("Requesting password reset:", url); // Log the request URL
-
-      const response = await fetch(url, { method: "GET" });
-
-      console.log("Request Password Reset API Status:", response.status);
-
-      // The API might return 400 for email not found, but we treat it as success for security
-      // Or handle it based on actual API behavior if needed
-      if (response.ok) {
-        // Even if response.ok is true, parse to potentially get the specific message
-        try {
-          const data = await response.json();
-          console.log("Request Password Reset Success Data:", data);
-          // Use the specific success message from API if available, otherwise generic
-          setEmailMessage(
-            data?.Response?.Message ||
-              "If an account exists for this email, a password reset link has been sent.",
-          );
-        } catch (parseError) {
-          console.error("Error parsing success response:", parseError);
-          setEmailMessage(
-            "If an account exists for this email, a password reset link has been sent.",
-          );
-        }
-        setEmailMessageType("success");
-        setEmail(""); // Clear email field on success
-      } else {
-        // Handle specific errors like 400 (Email not found) or others
-        let errorMessage = "Failed to send reset link. Please try again.";
-        try {
-          const errorData = await response.json();
-          console.log("Request Password Reset Error Data:", errorData);
-          if (
-            response.status === 400 &&
-            errorData.message === "Email not found"
-          ) {
-            // For security, show the same message as success to prevent email enumeration
-            errorMessage =
-              "If an account exists for this email, a password reset link has been sent.";
-            setEmailMessageType("success"); // Treat as success UI-wise
-            setEmail("");
-          } else {
-            errorMessage = errorData.message || errorMessage;
-            setEmailMessageType("error");
-          }
-        } catch (parseError) {
-          console.error("Error parsing error response:", parseError);
-          setEmailMessageType("error");
-        }
-        setEmailMessage(errorMessage);
+      // If it's the special redirect error, re-throw it so Next.js handles it
+      if ((error as any)?.digest?.startsWith("NEXT_REDIRECT")) {
+        throw error;
       }
-    } catch (error) {
-      console.error("Request password reset network error:", error);
-      setEmailMessage(
-        "An unexpected network error occurred. Please try again later.",
-      );
-      setEmailMessageType("error");
-    }
-    setIsEmailLoading(false);
-  };
 
-  // Common container styling
+      // Otherwise, it's an unexpected error from resetPasswordWithToken or validation
+      console.error("Server Action: Password reset action error:", error);
+      // Redirect back to password form with error
+      redirect(`/reset-password?token=${resetToken}&error=reset_failed`);
+    }
+  }
+
+  // --- Render Logic ---
   const containerClasses =
     "flex flex-col items-center max-w-xs mx-auto pt-24 pb-12 px-4";
 
-  // Initial loading state while checking token
-  if (initialCheckLoading) {
-    return (
-      <div className={containerClasses}>
-        <p className="text-gray-400">Loading...</p>{" "}
-        {/* Or use a spinner component */}
-      </div>
-    );
-  }
-
-  // Render Password Form if token is valid
-  if (viewMode === "password" && isValidToken === true) {
-    return (
-      <div className={containerClasses}>
-        <h1 className="text-3xl font-bold mb-8 text-center text-[#ffe230]">
-          Set New Password
-        </h1>
-        {/* Display success message for password reset */}
-        {passwordMessage && passwordMessageType === "success" && (
-          <p className="text-green-400 text-sm font-medium mb-4 text-center">
-            {passwordMessage}
-          </p>
-        )}
-        <form onSubmit={handlePasswordSubmit} className="space-y-5 w-full">
-          {/* Disable form fields after successful password reset */}
-          <fieldset disabled={passwordMessageType === "success"}>
-            <div>
-              <label
-                htmlFor="newPassword"
-                className="block text-sm font-medium mb-1 text-gray-300"
-              >
-                New Password
-              </label>
-              <input
-                type="password"
-                id="newPassword"
-                value={newPassword}
-                onChange={(e) => {
-                  setNewPassword(e.target.value);
-                  setPasswordErrors(validatePassword(e.target.value));
-                  if (
-                    passwordMessage &&
-                    passwordMessage === "Passwords do not match."
-                  )
-                    setPasswordMessage("");
-                }}
-                required
-                className={`mt-1 block w-full px-3 py-2 bg-white/5 border rounded-md text-sm shadow-sm placeholder-gray-400 text-white
-                  focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent 
-                  ${passwordErrors.length > 0 || (passwordMessageType === "error" && passwordMessage === "Passwords do not match.") ? "border-red-500" : "border-white/20"}`}
-              />
-              {passwordErrors.map((error, index) => (
-                <p key={index} className="text-red-400 text-xs mt-1">
-                  {error}
-                </p>
-              ))}
-            </div>
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium mb-1 text-gray-300"
-              >
-                Confirm New Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  if (
-                    passwordMessage &&
-                    passwordMessage === "Passwords do not match."
-                  )
-                    setPasswordMessage("");
-                }}
-                required
-                className={`mt-1 block w-full px-3 py-2 bg-white/5 border rounded-md text-sm shadow-sm placeholder-gray-400 text-white
-                  focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent 
-                  ${passwordMessageType === "error" && passwordMessage === "Passwords do not match." ? "border-red-500" : "border-white/20"}`}
-              />
-            </div>
-
-            {/* Display general password errors (not password match) */}
-            {passwordMessage &&
-              passwordMessageType === "error" &&
-              passwordMessage !== "Passwords do not match." && (
-                <p className="text-red-400 text-sm font-medium pt-1">
-                  {passwordMessage}
-                </p>
-              )}
-
-            <Button
-              type="submit"
-              variant="glass"
-              size="lg"
-              className="w-full mt-2"
-              loading={isPasswordLoading}
-              disabled={isPasswordLoading || passwordMessageType === "success"} // Disable after success
-            >
-              Reset Password
-            </Button>
-          </fieldset>
-        </form>
-      </div>
-    );
-  }
-
-  // Render Email Form if no token, invalid token, or network error during validation
-  if (viewMode === "email") {
-    return (
-      <div className={containerClasses}>
-        <h1 className="text-3xl font-bold mb-8 text-center text-[#ffe230]">
-          Forgot Password
-        </h1>
-        {/* Display token error message if applicable */}
-        {tokenErrorMessage && (
-          <p className="text-red-400 text-sm font-medium mb-4 text-center">
-            {tokenErrorMessage}
-          </p>
-        )}
-        {/* Display email submission message */}
-        {emailMessage && (
-          <p
-            className={`text-sm font-medium mb-4 text-center ${emailMessageType === "success" ? "text-green-400" : "text-red-400"}`}
-          >
-            {emailMessage}
-          </p>
-        )}
-        <form onSubmit={handleEmailSubmit} className="space-y-5 w-full">
-          {/* Disable form after successful email submission? Optional */}
-          {/* <fieldset disabled={emailMessageType === 'success'}> */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium mb-1 text-gray-300"
-            >
-              Enter your account email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-              className={`mt-1 block w-full px-3 py-2 bg-white/5 border rounded-md text-sm shadow-sm placeholder-gray-400 text-white
-                        focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent border-white/20`}
-            />
-          </div>
-          <Button
-            type="submit"
-            variant="glass"
-            size="lg"
-            className="w-full mt-2"
-            loading={isEmailLoading}
-            disabled={isEmailLoading}
-          >
-            Send Reset Link
-          </Button>
-          {/* </fieldset> */}
-        </form>
-      </div>
-    );
-  }
-
-  // Fallback or generic error case (should ideally not be reached with current logic)
   return (
     <div className={containerClasses}>
-      <p className="text-red-400">An unexpected error occurred.</p>
+      {viewMode === "password" && token ? (
+        // --- Password Reset View ---
+        <>
+          <h1 className="text-3xl font-bold mb-8 text-center text-[#ffe230]">
+            Set New Password
+          </h1>
+          {/* Display general server errors for this form */}
+          {displayError &&
+            errorKey !== "password_mismatch" &&
+            errorKey !== "password_too_short" && (
+              <p className="text-red-400 text-sm font-medium mb-4 text-center">
+                {displayError}
+              </p>
+            )}
+          {/* Render the client form, passing the action, token, and initial error key */}
+          <ResetPasswordForm
+            token={token}
+            resetPasswordAction={resetPasswordAction}
+            initialErrorKey={errorKey} // Pass error key for client form to potentially use
+          />
+        </>
+      ) : (
+        // --- Email Request View ---
+        <>
+          <h1 className="text-3xl font-bold mb-8 text-center text-[#ffe230]">
+            Forgot Password
+          </h1>
+          {/* Display message or error for the email form */}
+          {displayMessage && (
+            <p className="text-green-400 text-sm font-medium mb-4 text-center">
+              {displayMessage}
+            </p>
+          )}
+          {displayError && (
+            <p className="text-red-400 text-sm font-medium mb-4 text-center">
+              {displayError}
+            </p>
+          )}
+          {/* Render the client form, passing the action */}
+          <RequestResetLinkForm
+            requestResetLinkAction={requestResetLinkAction}
+          />
+        </>
+      )}
     </div>
   );
 }
