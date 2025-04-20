@@ -46,26 +46,36 @@ export default function Navbar({ isLoggedIn, userName }: NavbarProps) {
           </Link>
           <ul className="flex list-none space-x-6 items-center">
             <li>
-              <Link href="/" className="text-white hover:text-[#ffe230]">
+              <Link
+                href="/"
+                prefetch={true}
+                className="text-white hover:text-[#ffe230]"
+              >
                 Home
               </Link>
             </li>
             <li>
               <Link
                 href="/how-to-play-pidro"
+                prefetch={true}
                 className="text-white hover:text-[#ffe230]"
               >
                 How to Play Pidro
               </Link>
             </li>
             <li>
-              <Link href="/blog" className="text-white hover:text-[#ffe230]">
+              <Link
+                href="/blog"
+                prefetch={true}
+                className="text-white hover:text-[#ffe230]"
+              >
                 Blog
               </Link>
             </li>
             <li>
               <Link
                 href="/changelog"
+                prefetch={true}
                 className="text-white hover:text-[#ffe230]"
               >
                 Changelog
@@ -88,6 +98,7 @@ export default function Navbar({ isLoggedIn, userName }: NavbarProps) {
             <div className="flex items-center space-x-4 bg-yellow-900/70 rounded-md px-3 py-1 shadow-inner">
               <Link
                 href="/profile"
+                prefetch={true}
                 className="text-sm font-medium text-gray-100 hover:text-white"
               >
                 My Profile
@@ -98,7 +109,7 @@ export default function Navbar({ isLoggedIn, userName }: NavbarProps) {
               <NavbarSignOutButton />
             </div>
           ) : (
-            <Link href="/login" passHref legacyBehavior>
+            <Link href="/login" prefetch={true}>
               <Button variant="glass" size="sm">
                 Player Login
               </Button>
@@ -140,7 +151,7 @@ export default function Navbar({ isLoggedIn, userName }: NavbarProps) {
             // Assuming NavbarSignOutButton might use Button internally later
             <NavbarSignOutButton />
           ) : (
-            <Link href="/login" passHref legacyBehavior>
+            <Link href="/login" prefetch={true}>
               {/* Use Button with icon */}
               <Button
                 variant="glass"
@@ -163,6 +174,7 @@ export default function Navbar({ isLoggedIn, userName }: NavbarProps) {
             <li>
               <Link
                 href="/"
+                prefetch={true}
                 className="text-white hover:text-[#ffe230] block py-2"
                 onClick={toggleMobileMenu}
               >
@@ -172,6 +184,7 @@ export default function Navbar({ isLoggedIn, userName }: NavbarProps) {
             <li>
               <Link
                 href="/how-to-play-pidro"
+                prefetch={true}
                 className="text-white hover:text-[#ffe230] block py-2"
                 onClick={toggleMobileMenu}
               >
@@ -181,6 +194,7 @@ export default function Navbar({ isLoggedIn, userName }: NavbarProps) {
             <li>
               <Link
                 href="/blog"
+                prefetch={true}
                 className="text-white hover:text-[#ffe230] block py-2"
                 onClick={toggleMobileMenu}
               >
@@ -190,6 +204,7 @@ export default function Navbar({ isLoggedIn, userName }: NavbarProps) {
             <li>
               <Link
                 href="/changelog"
+                prefetch={true}
                 className="text-white hover:text-[#ffe230] block py-2"
                 onClick={toggleMobileMenu}
               >
@@ -216,6 +231,7 @@ export default function Navbar({ isLoggedIn, userName }: NavbarProps) {
                 <li>
                   <Link
                     href="/profile"
+                    prefetch={true}
                     className="text-white hover:text-[#ffe230] block py-2"
                     onClick={toggleMobileMenu}
                   >

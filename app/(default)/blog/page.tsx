@@ -77,6 +77,7 @@ export default async function BlogPage() {
                 <h2 className="text-lg font-semibold mb-2 text-gray-100 group-hover:text-white transition-colors">
                   <Link
                     href={`/posts/${post.slug}`}
+                    prefetch={true}
                     className="hover:text-[#ffe230] transition-colors duration-200 after:content-[''] after:absolute after:inset-0"
                   >
                     {post.title}
@@ -100,6 +101,7 @@ export default async function BlogPage() {
                 <div className="mt-auto pt-2">
                   <Link
                     href={`/posts/${post.slug}`}
+                    prefetch={true}
                     className="text-sm font-semibold text-[#ffe230] hover:text-yellow-300 transition-colors duration-200 relative z-10"
                   >
                     Read More &rarr;
