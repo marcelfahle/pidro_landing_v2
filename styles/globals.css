@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Remove default body styles as layout controls background/text color */
+/* 
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+*/
+
+/* Custom utility for the header logo background */
+@layer utilities {
+  .header-logo-bg {
+    @apply bg-[url('/logo-full.png')] bg-no-repeat bg-center bg-[length:200%_auto];
+    /* Apply responsive background-size using standard CSS within @media */
+    @media (min-width: 400px) {
+      background-size: 160% auto; /* Replaced @apply */
+    }
+    @media (min-width: 500px) {
+      background-size: 120% auto; /* Replaced @apply */
+    }
+    @media (min-width: 640px) {
+      background-size: cover; /* Replaced @apply */
+    }
+    /* Text indent utility */
+    text-indent: -9999em;
+  }
+  .text-indent-\[-9999em\] {
+    text-indent: -9999em;
+  }
+}
+
+/* Keep dark mode variable definitions if you plan to use them elsewhere */
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -14,14 +50,4 @@
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
 }

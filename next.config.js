@@ -7,9 +7,14 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'www.datocms-assets.com',
-        port: '',
+        protocol: "https",
+        hostname: "www.datocms-assets.com",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "s3-eu-west-1.amazonaws.com",
+        port: "",
       },
     ],
   },

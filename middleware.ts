@@ -1,27 +1,16 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { auth } from "@/auth"; // Adjust the path if your auth.ts is located elsewhere
 
-export function middleware(request: NextRequest) {
-  const userAgent = request.headers.get("user-agent")?.toLowerCase();
+// This exports the Auth.js middleware.
+// It will automatically protect pages if the session is invalid,
+// redirecting to the login page defined in auth.ts (pages: { signIn: '/login' })
+// By default, it runs on all paths.
+export { auth as middleware } from "@/auth";
 
-  if (userAgent?.includes("android")) {
-    // Android device - redirect to Play Store
-    return NextResponse.redirect(
-      "https://play.google.com/store/apps/details?id=com.oneapps.pidro",
-    );
-  }
-
-  if (userAgent?.includes("iphone") || userAgent?.includes("ipad")) {
-    // iOS device - redirect to App Store
-    return NextResponse.redirect(
-      "https://apps.apple.com/app/pidro/id1137091987",
-    );
-  }
-
-  // Desktop or unknown - maybe redirect to your website or app stores page
-  return NextResponse.redirect("https://pidro.online");
-}
-
-export const config = {
-  matcher: "/app/:path*", // This will only run the middleware on URLs that start with /app/
-};
+// Optional: Use the matcher to apply middleware only to specific paths.
+// This can improve performance by avoiding middleware runs on static assets or public pages.
+// export const config = {
+//   matcher: [
+//     "/profile/:path*", // Protect the profile page and any sub-paths
+//     // Add other protected routes here, e.g., "/dashboard/:path*"
+//   ],
+// };
