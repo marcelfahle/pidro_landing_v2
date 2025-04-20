@@ -4,6 +4,7 @@ import HeroSection from "@/components/home/hero-section";
 import StoreLinks from "@/components/home/store-links";
 import ScreenshotSlider from "@/components/home/screenshot-slider";
 import FeaturesSection from "@/components/home/features-section";
+import Link from "next/link";
 
 export default async function HomePage() {
   let data: HomePageProps["data"] | null = null;
@@ -26,12 +27,12 @@ export default async function HomePage() {
           We&apos;re having trouble loading the homepage. Please try again
           later.
         </p>
-        <a
+        <Link
           href="/"
           className="px-4 py-2 bg-white/10 rounded hover:bg-white/20 transition-colors"
         >
           Retry
-        </a>
+        </Link>
       </div>
     );
   }
