@@ -1,0 +1,23 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Next.js 15 Form Handling Pattern
+
+This project uses a standard pattern for handling forms within the Next.js 15 App Router:
+
+1.  **Server Component Page:** The main page component (e.g., [`app/(default)/login/page.tsx`](mdc:app/(default)/login/page.tsx), [`app/(default)/reset-password/page.tsx`](mdc:app/(default)/reset-password/page.tsx)) is a React Server Component (RSC).
+    *   It handles reading initial state from `searchParams` (e.g., error/success messages after redirects). Remember `searchParams` is a Promise in Next.js 15+ and needs to be awaited.
+    *   It defines the primary Server Action function(s) marked with `"use server";` for handling form submissions.
+
+2.  **Client Form Component:** The actual `<form>` element and its inputs are extracted into a separate Client Component (e.g., [`app/(default)/login/LoginForm.tsx`](mdc:app/(default)/login/LoginForm.tsx), [`app/(default)/reset-password/RequestResetLinkForm.tsx`](mdc:app/(default)/reset-password/RequestResetLinkForm.tsx), [`app/(default)/reset-password/ResetPasswordForm.tsx`](mdc:app/(default)/reset-password/ResetPasswordForm.tsx)).
+    *   This component receives the Server Action function as a prop (`action={serverAction}`).
+    *   It may contain minimal client-side state (`useState`) for instant validation feedback (like password matching in [`ResetPasswordForm.tsx`](mdc:app/(default)/reset-password/ResetPasswordForm.tsx)).
+    *   It uses a dedicated [`SubmitButton.tsx`](mdc:app/(default)/reset-password/SubmitButton.tsx) component.
+
+3.  **Submit Button (`useFormStatus`):** The [`SubmitButton.tsx`](mdc:app/(default)/reset-password/SubmitButton.tsx) is a client component that uses the `useFormStatus()` hook from `react-dom` to automatically track the form's pending state. This provides loading/disabled feedback without manual state management in the form component.
+
+4.  **Server Action Error/Redirect Handling:**
+    *   Server Actions typically handle success or specific errors by calling `redirect()` from `next/navigation` with relevant query parameters (e.g., `?error=some_key`, `?message=some_key`).
+    *   **Crucially:** The `try...catch` block within Server Actions *must* check for and re-throw the internal `NEXT_REDIRECT` signal to allow Next.js to handle the actual redirection. See the `catch` blocks in the actions within [`login/page.tsx`](mdc:app/(default)/login/page.tsx) and [`reset-password/page.tsx`](mdc:app/(default)/reset-password/page.tsx).
