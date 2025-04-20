@@ -82,6 +82,27 @@ export default async function PostPage({
     notFound();
   }
 
+  const renderBlock = ({ record }: { record: any }) => {
+    // Log the record to see what kind of block it is
+    console.log("Rendering Block:", record);
+
+    switch (record.__typename) {
+      // Example: Handle an Image block
+      // case 'ImageBlockRecord':
+      //   return <Image src={record.image.url} alt={record.image.alt || ''} width={record.image.width} height={record.image.height} />;
+
+      // Example: Handle a Code block
+      // case 'CodeBlockRecord':
+      //   return <CodeBlock language={record.language} code={record.code} />;
+
+      // Add cases for other block types you have defined in DatoCMS
+
+      default:
+        console.warn("Unhandled block type:", record.__typename, record);
+        return null; // Or render a placeholder
+    }
+  };
+
   return (
     <article className="max-w-3xl mx-auto py-8 px-4 font-sans">
       <h1 className="text-5xl font-bold mb-4 text-center text-[#ffe230] font-serif">
@@ -108,7 +129,7 @@ export default async function PostPage({
                    prose-ul:list-disc prose-ol:list-decimal 
                    prose-li:marker:text-gray-400"
       >
-        <StructuredText data={post.content} />
+        <StructuredText data={post.content} renderBlock={renderBlock} />
       </div>
     </article>
   );
