@@ -78,7 +78,7 @@ export default async function BlogPage() {
                   <Link
                     href={`/posts/${post.slug}`}
                     prefetch={true}
-                    className="hover:text-[#ffe230] transition-colors duration-200 after:content-[''] after:absolute after:inset-0"
+                    className="hover:text-[#ffe230] transition-colors duration-200"
                   >
                     {post.title}
                   </Link>
