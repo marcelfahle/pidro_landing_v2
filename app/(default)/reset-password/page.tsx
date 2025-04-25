@@ -5,52 +5,57 @@ import ResetPasswordForm from "./ResetPasswordForm";
 // --- Server-Side Utilities (Placeholders) ---
 // Replace these with your actual server-side logic imports/implementations
 async function validateResetTokenOnServer(token: string): Promise<boolean> {
-  console.log("Server: Validating token via API call:", token);
+  console.log("Server: Validating token directly via backend API:", token);
 
-  // Construct the absolute URL for the API endpoint
-  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"; // Fallback for local dev
-  const apiUrl = `${baseUrl}/api/validate-reset-token`;
+  // Directly use the backend API URL
+  const backendUrl = process.env.PIDRO_API_VALIDATE_RESET_TOKEN_URL; // Use a specific env var
+  // Or fallback to the hardcoded URL if the env var isn't set (adjust as needed)
+  const effectiveBackendUrl =
+    backendUrl || "https://api.pidro.online/v2/validate_reset_token";
+
+  if (!effectiveBackendUrl) {
+    console.error("Server: Backend token validation URL is not configured.");
+    // Throw an error consistent with previous logic if URL is missing
+    throw new Error("Server configuration error for token validation.");
+  }
+
+  console.log("Server: Calling backend URL:", effectiveBackendUrl);
 
   try {
-    const response = await fetch(apiUrl, {
+    const response = await fetch(effectiveBackendUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }), // Send token in the body
+      body: JSON.stringify({ token }),
     });
 
+    // Check if the backend call was successful
     if (!response.ok) {
-      // If API returns non-2xx status, treat token as invalid
       console.error(
-        `Server: Token validation API call failed (${response.status})`,
+        `Server: Backend token validation API call failed (${response.status})`,
       );
-      // Optionally parse response body for more specific error message if needed
-      // For simplicity, we just return false or throw
-      // throw new Error(`Token validation failed with status: ${response.status}`);
-      return false; // Treat non-ok response as invalid token
+      // Consider parsing the error from the backend if useful
+      // For now, treat any non-ok response from backend as invalid token
+      return false;
     }
 
+    // Assuming the backend returns { "valid": true } or similar on success
+    // Adapt this based on the actual backend response format
     const data = await response.json();
-    console.log("Server: Token validation API response:", data);
+    console.log("Server: Backend token validation API response:", data);
 
-    // Check for the expected 'valid' property in the response
-    if (typeof data.valid === "boolean") {
-      return data.valid;
-    }
-
-    // If response format is unexpected, treat as invalid
-    console.error(
-      "Server: Unexpected response format from token validation API.",
-    );
-    return false;
+    // Check for a specific success indicator from *your* backend API
+    // This might be data.valid, data.success, or just a 200 OK status
+    // Adjust this logic based on how api.pidro.online indicates a valid token
+    // For example, if it *only* returns 200 OK for valid, and non-200 for invalid:
+    return response.status === 200; // Or check data property like data.valid
   } catch (error) {
     console.error(
-      "Server: Network or fetch error during token validation:",
+      "Server: Network or fetch error during *backend* token validation:",
       error,
     );
     // Re-throw the error so the calling code knows something went wrong
-    // The calling code will set initialTokenErrorKey = 'token_validation_failed'
     throw new Error(
-      "Could not validate the reset link due to a network or server error.",
+      "Could not validate the reset link due to a network or server error connecting to the backend.",
     );
   }
 }
