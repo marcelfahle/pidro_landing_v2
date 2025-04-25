@@ -8,8 +8,7 @@ async function validateResetTokenOnServer(token: string): Promise<boolean> {
   console.log("Server: Validating token via API call:", token);
 
   // Construct the absolute URL for the API endpoint
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"; // Fallback for local dev
+  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"; // Fallback for local dev
   const apiUrl = `${baseUrl}/api/validate-reset-token`;
 
   try {
@@ -88,8 +87,7 @@ async function resetPasswordWithToken(
   console.log("Server: Attempting password reset with token:", token);
 
   // Construct the absolute URL for the API endpoint
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"; // Fallback for local dev
+  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"; // Fallback for local dev
   const apiUrl = `${baseUrl}/api/reset-password`;
 
   try {
