@@ -89,21 +89,32 @@ async function resetPasswordWithToken(
   token: string,
   newPassword: string,
 ): Promise<void> {
-  console.log("Server: Attempting password reset with token:", token);
+  console.log(
+    "Server: Attempting password reset directly via backend API:",
+    token,
+  );
 
-  // Construct the absolute URL for the API endpoint
-  const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000"; // Fallback for local dev
-  const apiUrl = `${baseUrl}/api/reset-password`;
+  // Directly use the backend API URL
+  const backendUrl = process.env.PIDRO_API_SET_NEW_PASSWORD_URL;
+  const effectiveBackendUrl =
+    backendUrl || "https://api.pidro.online/v2/set_new_password";
+
+  if (!effectiveBackendUrl) {
+    console.error("Server: Backend password reset URL is not configured.");
+    throw new Error("Server configuration error for password reset.");
+  }
+
+  console.log("Server: Calling backend URL:", effectiveBackendUrl);
 
   try {
-    const response = await fetch(apiUrl, {
+    const response = await fetch(effectiveBackendUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, newPassword }),
     });
 
     if (!response.ok) {
-      let errorMessage = "Error resetting password.";
+      let errorMessage = "Error resetting password via backend.";
       try {
         // Attempt to parse error message from API response
         const data = await response.json();
@@ -111,27 +122,42 @@ async function resetPasswordWithToken(
       } catch (parseError) {
         // Ignore if response body isn't valid JSON or empty
         console.error(
-          "Server: Could not parse error response from API:",
+          "Server: Could not parse error response from backend API:",
           parseError,
         );
       }
       console.error(
-        `Server: API call failed (${response.status}): ${errorMessage}`,
+        `Server: Backend API call failed (${response.status}): ${errorMessage}`,
       );
       // Throw an error to be caught by the Server Action
       throw new Error(errorMessage);
     }
 
-    // If response.ok, the password reset was successful
-    console.log("Server: Password reset successful via API.");
+    // If response.ok, the password reset was successful via backend
+    console.log("Server: Password reset successful via backend API.");
     // No need to return anything or redirect here; the Server Action handles it.
   } catch (error) {
-    console.error(
-      "Server: Network or fetch error during password reset:",
-      error,
-    );
-    // Re-throw the error or throw a new one for the Server Action
-    throw new Error("An unexpected error occurred during password reset.");
+    // Catch specific error type if possible, otherwise handle generic errors
+    if (error instanceof Error) {
+      console.error(
+        "Server: Network or fetch error during backend password reset:",
+        error.message,
+      );
+      // Re-throw the original error or a new tailored one
+      throw new Error(
+        error.message ||
+          "An unexpected error occurred during backend password reset.",
+      );
+    } else {
+      // Handle non-Error objects thrown
+      console.error(
+        "Server: An unexpected non-Error was thrown during backend password reset:",
+        error,
+      );
+      throw new Error(
+        "An unexpected error occurred during backend password reset.",
+      );
+    }
   }
 }
 
