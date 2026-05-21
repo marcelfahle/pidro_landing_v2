@@ -100,13 +100,6 @@ export default async function PostPage({
     notFound();
   }
 
-  // Log the content structure for debugging, especially in production
-  // Consider removing or reducing logging verbosity once the issue is resolved
-  console.log(
-    `Rendering content for slug: ${slug}`,
-    JSON.stringify(post.content, null, 2),
-  );
-
   // Check if post.content.value exists (the actual document JSON)
   if (!post.content.value) {
     console.error(
@@ -137,8 +130,6 @@ export default async function PostPage({
   }
 
   const renderBlock = ({ record }: { record: any }) => {
-    console.log("Rendering Custom Block:", record.__typename, record.id);
-
     switch (record.__typename) {
       case "ImageRecord":
         if (!record.image?.responsiveImage?.src) {
