@@ -1,4 +1,4 @@
-content_copygoogle.com, pub-5823074493809659, DIRECT, f08c47fec0942fa0
+google.com, pub-5823074493809659, DIRECT, f08c47fec0942fa0
 aceinmobi.com, 9e311c7a68e94888aac7fbb4272381e2, RESELLER
 adform.com, 716, RESELLER
 admanmedia.com, 2153, RESELLER
@@ -124,4 +124,3 @@ xapads.com, 117219, RESELLER
 yeahmobi.com, 5135195, RESELLER
 zmaticoo.com, 5135195, RESELLER
 zmaticoo.com, 5135704, RESELLER
-f
