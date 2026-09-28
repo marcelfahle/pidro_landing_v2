@@ -1,0 +1,514 @@
+/* Pidro Beta page. Materials follow the game's DS v2 bevel system:
+   gold rim -> keyline -> face -> gloss. */
+
+.page {
+  --felt-hi: #175086;
+  --felt: #0e3158;
+  --felt-deep: #0a2340;
+  --rim-hi: #f6de9a;
+  --rim: #e2af45;
+  --rim-lo: #c4892a;
+  --rim-deep: #8f5e12;
+  --gold-text: #ffd447;
+  --wood-hi: #b57a31;
+  --wood: #91541c;
+  --wood-lo: #6c370e;
+  --wood-deep: #4e2509;
+  --keyline: #2a1505;
+  --glow: #3fd0ff;
+  --card: #f7f8fb;
+  --ink: #08243d;
+  position: relative;
+  isolation: isolate;
+}
+
+.display {
+  font-family: var(--font-bree), Georgia, serif;
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  padding: 3.5rem 0 2rem;
+  text-align: center;
+}
+
+.spotlight {
+  position: absolute;
+  inset: -4rem -50vw 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 30%, rgba(63, 208, 255, 0.28), transparent 70%),
+    radial-gradient(ellipse 80% 70% at 50% 45%, rgba(23, 80, 134, 0.55), transparent 75%);
+  pointer-events: none;
+}
+
+.logoStage {
+  position: relative;
+  width: min(560px, 88vw);
+  margin: 0 auto;
+  aspect-ratio: 1614 / 975;
+}
+
+.shimmer {
+  position: absolute;
+  inset: -18% -10%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(63, 208, 255, 0.42) 40deg,
+    transparent 95deg,
+    transparent 180deg,
+    rgba(255, 212, 71, 0.3) 220deg,
+    transparent 280deg
+  );
+  filter: blur(38px);
+  opacity: 0.9;
+  animation: spin 14s linear infinite;
+}
+
+.logo {
+  position: relative;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 22px rgba(63, 208, 255, 0.35));
+  animation: float 6s ease-in-out infinite;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.75rem 0 1rem;
+  padding: 0.35rem 1rem 0.35rem 0.4rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(23, 80, 134, 0.9), rgba(10, 35, 64, 0.9));
+  box-shadow: 0 0 0 1px rgba(170, 235, 255, 0.35), 0 0 24px rgba(63, 208, 255, 0.25);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d9f4ff;
+}
+
+.badgeDot {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--rim-hi), var(--rim-lo));
+  color: var(--keyline);
+  font-size: 0.75rem;
+}
+
+.title {
+  margin: 0 auto 1rem;
+  max-width: 16ch;
+  font-size: clamp(2.4rem, 7vw, 4.25rem);
+  line-height: 1.02;
+  color: var(--gold-text);
+  text-wrap: balance;
+  text-shadow: 0 2px 0 var(--rim-deep), 0 4px 0 #5a3a08, 0 10px 28px rgba(0, 0, 0, 0.55);
+}
+
+.lede {
+  margin: 0 auto;
+  max-width: 34rem;
+  font-size: 1.15rem;
+  color: #d6e6f5;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+/* ---------- Bevel buttons (wood = primary, glass = secondary) ---------- */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 3px;
+  border-radius: 16px;
+  text-decoration: none !important;
+  transition: transform 120ms ease, filter 120ms ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--glow);
+  outline-offset: 3px;
+}
+
+.btnFace {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 13px;
+  padding: 0.8rem 1.6rem 0.95rem;
+  font-family: var(--font-bree), Georgia, serif;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  overflow: hidden;
+}
+
+.btnFace::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 50% 0;
+  border-radius: 13px 13px 0 0;
+  pointer-events: none;
+}
+
+.wood {
+  background: linear-gradient(180deg, var(--rim-hi) 0%, var(--rim) 35%, var(--rim-lo) 65%, var(--rim-deep) 100%);
+}
+
+.wood .btnFace {
+  background: linear-gradient(180deg, var(--wood-hi) 0%, var(--wood) 42%, var(--wood-lo) 78%, var(--wood-deep) 100%);
+  box-shadow: inset 0 0 0 1px var(--keyline);
+  color: var(--gold-text) !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55);
+}
+
+.wood .btnFace::before {
+  background: linear-gradient(180deg, rgba(255, 248, 225, 0.24), rgba(255, 248, 225, 0.05));
+}
+
+.glass {
+  background: linear-gradient(180deg, rgba(170, 235, 255, 0.72) 0%, rgba(60, 140, 190, 0.55) 50%, rgba(16, 72, 112, 0.68) 100%);
+}
+
+.glass .btnFace {
+  background: linear-gradient(180deg, rgba(46, 118, 178, 0.95) 0%, rgba(24, 78, 128, 0.95) 100%);
+  color: #ffffff !important;
+  font-size: 1rem;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass .btnFace::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.02));
+}
+
+/* ---------- Platform panels ---------- */
+
+.panels {
+  display: grid;
+  gap: 1.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  margin-top: 3.5rem;
+}
+
+.panel {
+  position: relative;
+  padding: 3px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, var(--rim-hi) 0%, var(--rim) 30%, var(--rim-lo) 70%, var(--rim-deep) 100%);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+}
+
+.panelFace {
+  position: relative;
+  height: 100%;
+  border-radius: 21px;
+  padding: 1.75rem 1.5rem 2rem;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(63, 208, 255, 0.16), transparent 60%),
+    linear-gradient(180deg, var(--felt-hi) 0%, var(--felt) 45%, var(--felt-deep) 100%);
+  box-shadow: inset 0 0 0 1px var(--keyline), inset 0 2px 0 rgba(255, 255, 255, 0.08);
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.platformIcon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(170, 235, 255, 0.25), rgba(16, 72, 112, 0.4));
+  box-shadow: inset 0 0 0 1px rgba(170, 235, 255, 0.35);
+  color: #d9f4ff;
+}
+
+.panelTitle {
+  font-size: 1.6rem;
+  color: var(--gold-text);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.45);
+}
+
+.panelSub {
+  font-size: 0.9rem;
+  color: #a9c7e2;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 2.6rem 1fr;
+  gap: 1rem;
+  align-items: start;
+  color: #e3eef8;
+}
+
+/* Step number as a tiny playing card */
+.pip {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 3.5rem;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #ffffff, var(--card));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(8, 36, 61, 0.15);
+  font-family: var(--font-bree), Georgia, serif;
+  font-size: 1.35rem;
+  color: #c8102e;
+  transform: rotate(-4deg);
+}
+
+.step:nth-child(2) .pip {
+  transform: rotate(3deg);
+}
+
+.step:nth-child(3) .pip {
+  transform: rotate(-2deg);
+}
+
+.pip::after {
+  content: "\2665";
+  position: absolute;
+  bottom: 3px;
+  right: 5px;
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.stepBody {
+  padding-top: 0.2rem;
+}
+
+.stepBody strong {
+  color: #ffffff;
+}
+
+.stepAction {
+  margin-top: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.note {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  margin-top: 0.9rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  background: rgba(8, 36, 61, 0.65);
+  box-shadow: inset 0 0 0 1px rgba(170, 235, 255, 0.22);
+  font-size: 0.9rem;
+  color: #cfe3f5;
+}
+
+.pulse {
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-top: 0.4rem;
+  border-radius: 50%;
+  background: var(--glow);
+  box-shadow: 0 0 0 0 rgba(63, 208, 255, 0.7);
+  animation: pulse 2s ease-out infinite;
+}
+
+.muted {
+  font-size: 0.85rem;
+  color: #a9c7e2;
+}
+
+.mono {
+  user-select: all;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ---------- Classic plaque ---------- */
+
+.plaque {
+  position: relative;
+  margin-top: 3.5rem;
+  padding: 4px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, var(--rim-hi) 0%, var(--rim) 35%, var(--rim-lo) 65%, var(--rim-deep) 100%);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5);
+}
+
+.plaqueFace {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 2.25rem 1.75rem;
+  background:
+    repeating-linear-gradient(92deg, rgba(0, 0, 0, 0.06) 0 2px, transparent 2px 9px),
+    linear-gradient(180deg, var(--wood-hi) 0%, var(--wood) 40%, var(--wood-lo) 80%, var(--wood-deep) 100%);
+  box-shadow: inset 0 0 0 1px var(--keyline), inset 0 3px 0 rgba(255, 248, 225, 0.18);
+  color: #fbeed5;
+}
+
+.plaqueGrid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  align-items: center;
+}
+
+.plaqueTitle {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  line-height: 1.1;
+  color: var(--gold-text);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
+  margin-bottom: 0.75rem;
+}
+
+.perks {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.perk {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  background: rgba(30, 14, 4, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(246, 222, 154, 0.2);
+}
+
+.perkIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--rim-hi), var(--rim-lo));
+  color: var(--keyline);
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.fan {
+  position: relative;
+  height: 11rem;
+  margin: 0 auto;
+  width: 15rem;
+}
+
+.fanCard {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 5.2rem;
+  height: 7.4rem;
+  margin-left: -2.6rem;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #ffffff, var(--card));
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(8, 36, 61, 0.12);
+  transform-origin: 50% 120%;
+  font-family: var(--font-bree), Georgia, serif;
+  color: #c8102e;
+  font-size: 1.6rem;
+  padding: 0.4rem 0.55rem;
+  line-height: 1;
+}
+
+.fanCard span {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.fanCard:nth-child(1) { transform: rotate(-24deg); }
+.fanCard:nth-child(2) { transform: rotate(-8deg); }
+.fanCard:nth-child(3) { transform: rotate(8deg); }
+.fanCard:nth-child(4) { transform: rotate(24deg); color: var(--ink); }
+
+.fanCard.back {
+  background:
+    repeating-linear-gradient(45deg, rgba(63, 208, 255, 0.18) 0 4px, transparent 4px 10px),
+    linear-gradient(180deg, var(--felt-hi), var(--felt-deep));
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45), inset 0 0 0 2px rgba(170, 235, 255, 0.55);
+}
+
+/* ---------- Footer strip ---------- */
+
+.bug {
+  margin-top: 3rem;
+  text-align: center;
+  color: #cfe3f5;
+}
+
+.bugTitle {
+  font-size: 1.4rem;
+  color: var(--gold-text);
+  margin-bottom: 0.4rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(63, 208, 255, 0.7); }
+  80%, 100% { box-shadow: 0 0 0 12px rgba(63, 208, 255, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer, .logo, .pulse { animation: none; }
+  .btn, .btn:hover { transition: none; transform: none; }
+}

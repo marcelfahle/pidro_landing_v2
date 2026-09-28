@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { Bree_Serif } from "next/font/google";
+import styles from "./beta.module.css";
+import logo from "@/public/logo-v3.png";
 
 // Store links for the side-by-side beta. Swap a value here when it changes;
 // `null` shows the "almost ready" note instead of a button.
@@ -6,163 +10,230 @@ const TESTFLIGHT_URL: string | null = null; // public link, after Beta App Revie
 const PLAY_OPT_IN_URL = "https://play.google.com/apps/internaltest/4701258305664024339";
 const SUPPORT_EMAIL = "support@pidro.net";
 
+const bree = Bree_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-bree",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Join the Pidro Beta",
   description:
-    "Try the new Pidro before everyone else. It installs next to Classic, so you keep playing both.",
+    "Play the new Pidro first. It sits next to Classic until launch, then replaces it.",
+  openGraph: {
+    title: "Join the Pidro Beta",
+    description: "Play the new Pidro first. During the beta it installs next to Classic.",
+    images: ["/logo-v3.png"],
+  },
 };
 
-function Step({ n, children }: { n: number; children: React.ReactNode }) {
-  return (
-    <li className="flex gap-4">
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ffe230] font-bold text-[#0d304b]">
-        {n}
-      </span>
-      <div className="pt-1">{children}</div>
-    </li>
-  );
-}
-
-function StoreButton({ href, label }: { href: string; label: string }) {
+function BevelLink({
+  href,
+  children,
+  material = "wood",
+  external = true,
+}: {
+  href: string;
+  children: React.ReactNode;
+  material?: "wood" | "glass";
+  external?: boolean;
+}) {
   return (
     <a
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-block rounded-lg bg-[#ffe230] px-5 py-3 font-semibold !text-[#0d304b] hover:bg-yellow-300"
+      className={`${styles.btn} ${styles[material]}`}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
     >
-      {label}
+      <span className={styles.btnFace}>{children}</span>
     </a>
   );
 }
 
-function Card({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+function Step({ n, children }: { n: string; children: React.ReactNode }) {
   return (
-    <section
-      id={id}
-      aria-labelledby={`${id}-title`}
-      className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8"
-    >
-      <h2 id={`${id}-title`} className="mb-6 text-2xl font-bold text-[#ffe230]">
-        {title}
-      </h2>
-      {children}
-    </section>
+    <li className={styles.step}>
+      <span className={styles.pip} aria-hidden="true">
+        {n}
+      </span>
+      <div className={styles.stepBody}>{children}</div>
+    </li>
+  );
+}
+
+function AppleIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M16.37 12.65c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.18-1.72-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.87-.76-1.47.02-2.83.86-3.59 2.18-1.53 2.66-.39 6.6 1.1 8.76.73 1.06 1.6 2.24 2.73 2.2 1.1-.05 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.13.84-1.22 1.18-2.41 1.2-2.47-.03-.01-2.3-.88-2.32-3.5ZM14.2 6.19c.6-.73 1.01-1.75.9-2.76-.87.04-1.92.58-2.54 1.3-.56.64-1.05 1.68-.92 2.67.97.08 1.96-.49 2.56-1.21Z" />
+    </svg>
+  );
+}
+
+function AndroidIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M17.6 9.48 19.44 6.3a.38.38 0 0 0-.66-.38l-1.87 3.23A11.5 11.5 0 0 0 12 8.1c-1.77 0-3.43.38-4.9 1.06L5.22 5.92a.38.38 0 1 0-.66.38L6.4 9.48C3.24 11.2 1.08 14.4.75 18.16h22.5c-.33-3.76-2.49-6.96-5.65-8.68ZM7 15.27a1.03 1.03 0 1 1 0-2.06 1.03 1.03 0 0 1 0 2.06Zm10 0a1.03 1.03 0 1 1 0-2.06 1.03 1.03 0 0 1 0 2.06Z" />
+    </svg>
   );
 }
 
 export default function BetaPage() {
-  const mailAndroid = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
-    "Pidro Beta for Android",
-  )}&body=${encodeURIComponent("My Google Play email is: ")}`;
-
   return (
-    <div className="mx-auto max-w-3xl pt-16 pb-12">
-      <header className="mb-12 text-center">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-gray-300">
-          Pidro Beta
+    <div className={`${styles.page} ${bree.variable} mx-auto max-w-5xl pb-12`}>
+      <header className={styles.hero}>
+        <div className={styles.spotlight} aria-hidden="true" />
+        <div className={styles.logoStage}>
+          <div className={styles.shimmer} aria-hidden="true" />
+          <Image src={logo} alt="Pidro" priority className={styles.logo} sizes="(max-width: 640px) 88vw, 560px" />
+        </div>
+
+        <span className={styles.badge}>
+          <span className={styles.badgeDot} aria-hidden="true">
+            ♠
+          </span>
+          Beta · invite open
+        </span>
+
+        <h1 className={`${styles.display} ${styles.title}`}>Play the new Pidro first</h1>
+        <p className={styles.lede}>
+          For now it sits next to Classic on your phone. At launch it replaces Classic, and
+          your account comes with you.
         </p>
-        <h1 className="mb-4 text-4xl font-bold text-[#ffe230] sm:text-5xl text-balance">
-          Play the new Pidro first
-        </h1>
-        <p className="mx-auto max-w-xl text-lg text-gray-200">
-          The new Pidro installs next to Classic, so you keep playing both. Your
-          Classic account, games and friends stay exactly where they are.
-        </p>
-        <nav className="mt-8 flex flex-wrap justify-center gap-3">
-          <a href="#iphone" className="rounded-full border border-white/20 px-4 py-2">
-            iPhone and iPad
-          </a>
-          <a href="#android" className="rounded-full border border-white/20 px-4 py-2">
-            Android
-          </a>
-          <a href="#classic" className="rounded-full border border-white/20 px-4 py-2">
-            Your Classic account
-          </a>
-        </nav>
+
+        <div className={styles.heroActions}>
+          <BevelLink href="#iphone" external={false}>
+            <AppleIcon /> Get it on iPhone
+          </BevelLink>
+          <BevelLink href="#android" material="glass" external={false}>
+            <AndroidIcon /> Get it on Android
+          </BevelLink>
+        </div>
       </header>
 
-      <div className="flex flex-col gap-8">
-        <Card id="iphone" title="iPhone and iPad">
-          <ol className="flex flex-col gap-5">
-            <Step n={1}>
-              Install <strong>TestFlight</strong> from the App Store. It is
-              Apple&apos;s free app for trying games before they launch.
-            </Step>
-            <Step n={2}>
-              Open the invite link on your iPhone and tap <strong>Accept</strong>,
-              then <strong>Install</strong>.
-              <div className="mt-4">
+      <div className={styles.panels}>
+        <section id="iphone" aria-labelledby="iphone-title" className={styles.panel}>
+          <div className={styles.panelFace}>
+            <div className={styles.panelHead}>
+              <span className={styles.platformIcon}>
+                <AppleIcon />
+              </span>
+              <div>
+                <h2 id="iphone-title" className={`${styles.display} ${styles.panelTitle}`}>
+                  iPhone &amp; iPad
+                </h2>
+                <p className={styles.panelSub}>Through TestFlight</p>
+              </div>
+            </div>
+            <ol className={styles.steps}>
+              <Step n="A">
+                Install <strong>TestFlight</strong>, Apple&apos;s free app for test games.
+                <div className={styles.stepAction}>
+                  <BevelLink href="https://apps.apple.com/app/testflight/id899247664" material="glass">
+                    Get TestFlight
+                  </BevelLink>
+                </div>
+              </Step>
+              <Step n="2">
+                Open your invite on your iPhone. Tap <strong>Accept</strong>, then{" "}
+                <strong>Install</strong>.
                 {TESTFLIGHT_URL ? (
-                  <StoreButton href={TESTFLIGHT_URL} label="Open the TestFlight invite" />
+                  <div className={styles.stepAction}>
+                    <BevelLink href={TESTFLIGHT_URL}>Join the beta</BevelLink>
+                  </div>
                 ) : (
-                  <p className="rounded-lg bg-white/10 px-4 py-3 text-sm text-gray-200">
-                    The invite link goes live as soon as Apple approves the first
-                    build, usually within a day. Check back here soon.
+                  <p className={styles.note}>
+                    <span className={styles.pulse} aria-hidden="true" />
+                    <span>Apple is checking the first build. The link goes live here soon.</span>
                   </p>
                 )}
-              </div>
-            </Step>
-            <Step n={3}>
-              Look for <strong>Pidro Beta</strong> on your home screen. Classic
-              stays installed as <strong>Pidro</strong>.
-            </Step>
-          </ol>
-        </Card>
+              </Step>
+              <Step n="3">
+                Open <strong>Pidro Beta</strong>. Classic stays installed.
+              </Step>
+            </ol>
+          </div>
+        </section>
 
-        <Card id="android" title="Android">
-          <ol className="flex flex-col gap-5">
-            <Step n={1}>
-              Send us the email address you use for Google Play, so we can add
-              you to the test.
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <StoreButton href={mailAndroid} label="Email us your Play address" />
-                <span className="text-sm text-gray-300">
-                  or write to <span className="select-all">{SUPPORT_EMAIL}</span>
-                </span>
+        <section id="android" aria-labelledby="android-title" className={styles.panel}>
+          <div className={styles.panelFace}>
+            <div className={styles.panelHead}>
+              <span className={styles.platformIcon}>
+                <AndroidIcon />
+              </span>
+              <div>
+                <h2 id="android-title" className={`${styles.display} ${styles.panelTitle}`}>
+                  Android
+                </h2>
+                <p className={styles.panelSub}>Through Google Play</p>
               </div>
-            </Step>
-            <Step n={2}>
-              Once you are on the list, open the test link on your phone and tap{" "}
-              <strong>Become a tester</strong>.
-              <div className="mt-4">
-                <StoreButton href={PLAY_OPT_IN_URL} label="Open the Play test link" />
-              </div>
-            </Step>
-            <Step n={3}>
-              Tap <strong>Download it on Google Play</strong> and install{" "}
-              <strong>Pidro Beta</strong>. Classic stays installed next to it.
-            </Step>
-          </ol>
-        </Card>
-
-        <Card id="classic" title="Bring your Classic account">
-          <p className="mb-4">
-            Played Pidro for years? Your history comes with you. In the beta,
-            open your profile and choose <strong>Claim Classic</strong>, then sign
-            in the way you always did: username or email with your password, or
-            Sign in with Apple, or Facebook.
-          </p>
-          <ul className="list-disc space-y-2 pl-6 text-gray-200">
-            <li>Your games played, level and name come over. Nothing is deleted.</li>
-            <li>Classic keeps working exactly as before.</li>
-            <li>Your old name is reserved for you, so nobody else can take it.</li>
-          </ul>
-          <p className="mt-4 text-sm text-gray-300">
-            Claiming is rolling out during the beta. If you don&apos;t see the
-            button yet, play as a guest and claim later; your progress is kept.
-          </p>
-        </Card>
-
-        <section className="text-center text-gray-300">
-          <h2 className="mb-2 text-xl font-bold text-[#ffe230]">Found a bug?</h2>
-          <p>
-            On iPhone, take a screenshot and TestFlight asks if you want to send
-            it to us. Anywhere else, write to{" "}
-            <span className="select-all">{SUPPORT_EMAIL}</span>.
-          </p>
+            </div>
+            <ol className={styles.steps}>
+              <Step n="A">
+                Open your invite on your phone and tap <strong>Become a tester</strong>. Use
+                the Google account we invited.
+                <div className={styles.stepAction}>
+                  <BevelLink href={PLAY_OPT_IN_URL}>Join on Google Play</BevelLink>
+                </div>
+              </Step>
+              <Step n="2">
+                Tap <strong>Download it on Google Play</strong>. Classic stays installed.
+              </Step>
+            </ol>
+          </div>
         </section>
       </div>
+
+      <section id="classic" aria-labelledby="classic-title" className={styles.plaque}>
+        <div className={styles.plaqueFace}>
+          <div className={styles.plaqueGrid}>
+            <div>
+              <h2 id="classic-title" className={`${styles.display} ${styles.plaqueTitle}`}>
+                Played Classic? Bring your history.
+              </h2>
+              <p className="mb-5">
+                In the app, tap <strong>Claim Classic</strong> and sign in like you always did.
+              </p>
+              <ul className={styles.perks}>
+                <li className={styles.perk}>
+                  <span className={styles.perkIcon} aria-hidden="true">✓</span>
+                  <span>Your games, level and name come over.</span>
+                </li>
+                <li className={styles.perk}>
+                  <span className={styles.perkIcon} aria-hidden="true">✓</span>
+                  <span>Classic keeps working until launch day.</span>
+                </li>
+                <li className={styles.perk}>
+                  <span className={styles.perkIcon} aria-hidden="true">✓</span>
+                  <span>Your name is saved for you.</span>
+                </li>
+              </ul>
+              <p className="mt-4 text-sm text-[#f3dcb0]">
+                No button yet? Play as a guest and claim later. You keep your progress.
+              </p>
+            </div>
+            <div className={styles.fan} aria-hidden="true">
+              <div className={styles.fanCard}>
+                A<span>♥</span>
+              </div>
+              <div className={styles.fanCard}>
+                J<span>♥</span>
+              </div>
+              <div className={styles.fanCard}>
+                5<span>♦</span>
+              </div>
+              <div className={`${styles.fanCard} ${styles.back}`} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.bug}>
+        <h2 className={`${styles.display} ${styles.bugTitle}`}>Found a bug?</h2>
+        <p>
+          Take a screenshot in the app and send it, or write to{" "}
+          <span className={styles.mono}>{SUPPORT_EMAIL}</span>.
+        </p>
+      </section>
     </div>
   );
 }
