@@ -22,6 +22,14 @@
   isolation: isolate;
 }
 
+/* The hero glow bleeds to the viewport edges. Clip at the viewport (not the
+   page box, which would leave hard edges in the gutter) so it never widens
+   the page or lets phones pan sideways. */
+:global(html):has(.page),
+:global(body):has(.page) {
+  overflow-x: clip;
+}
+
 .display {
   font-family: var(--font-bree), Georgia, serif;
   letter-spacing: 0.01em;
@@ -37,7 +45,7 @@
 
 .spotlight {
   position: absolute;
-  inset: -4rem -50vw 0;
+  inset: -4rem calc(50% - 50vw) 0;
   z-index: -1;
   background:
     radial-gradient(ellipse 60% 55% at 50% 30%, rgba(63, 208, 255, 0.28), transparent 70%),
