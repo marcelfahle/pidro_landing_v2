@@ -654,36 +654,6 @@
   animation: wiggle 500ms ease;
 }
 
-.toss {
-  position: absolute;
-  top: 45%;
-  width: 2.4rem;
-  height: 3.3rem;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #fff, var(--card));
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
-  font-family: var(--font-bree), Georgia, serif;
-  color: #c8102e;
-  font-size: 0.95rem;
-  padding: 3px 5px;
-  pointer-events: none;
-  opacity: 0;
-  animation: toss 2.4s cubic-bezier(0.2, 0.7, 0.3, 1) 600ms forwards;
-}
-
-.tossL {
-  left: 8%;
-  --tx: -60px;
-  --rot: -30deg;
-}
-
-.tossR {
-  right: 8%;
-  --tx: 60px;
-  --rot: 32deg;
-  color: var(--ink);
-  animation-delay: 750ms;
-}
 
 @keyframes deal {
   from { opacity: 0; transform: translateY(40px) rotate(-3deg) scale(0.96); }
@@ -696,14 +666,8 @@
   60% { rotate: 8deg; }
 }
 
-@keyframes toss {
-  0% { opacity: 0; transform: translate(0, 60px) rotate(0deg); }
-  30% { opacity: 1; }
-  100% { opacity: 0.9; transform: translate(var(--tx), -40px) rotate(var(--rot)); }
-}
 
 @media (prefers-reduced-motion: reduce) {
-  .deal, .toss, .step:hover .pip { animation: none; }
-  .toss { opacity: 0.9; }
+  .deal, .step:hover .pip { animation: none; }
   .langCard, .phone { transition: none; }
 }

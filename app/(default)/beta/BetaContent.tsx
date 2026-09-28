@@ -100,8 +100,6 @@ export function BetaContent({ lang }: { lang: Lang }) {
 
       <header className={styles.hero}>
         <div className={styles.spotlight} aria-hidden="true" />
-        <span className={`${styles.toss} ${styles.tossL}`} aria-hidden="true">A♥</span>
-        <span className={`${styles.toss} ${styles.tossR}`} aria-hidden="true">J♠</span>
         <div className={styles.logoStage}>
           <div className={styles.shimmer} aria-hidden="true" />
           <Image src={logo} alt="Pidro" priority className={styles.logo} sizes="(max-width: 640px) 88vw, 560px" />
