@@ -51,6 +51,9 @@
     radial-gradient(ellipse 60% 55% at 50% 30%, rgba(63, 208, 255, 0.28), transparent 70%),
     radial-gradient(ellipse 80% 70% at 50% 45%, rgba(23, 80, 134, 0.55), transparent 75%);
   pointer-events: none;
+  /* Fade in from the top so the glow never shows a hard edge under the nav. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
 }
 
 .logoStage {

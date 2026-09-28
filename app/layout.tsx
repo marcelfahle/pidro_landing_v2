@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 // import { headers } from 'next/headers'; // Remove headers import
@@ -13,6 +14,11 @@ const inter = Inter({
   variable: "--font-inter",
   display: "swap",
 });
+
+// Tints the mobile browser chrome (status bar / toolbar) to the page's felt.
+export const viewport: Viewport = {
+  themeColor: "#0d304b",
+};
 
 interface RootLayoutProps {
   children: React.ReactNode;
