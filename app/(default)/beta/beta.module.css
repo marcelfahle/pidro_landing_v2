@@ -512,3 +512,198 @@
   .shimmer, .logo, .pulse { animation: none; }
   .btn, .btn:hover { transition: none; transform: none; }
 }
+
+/* ---------- Language switcher: two playing cards ---------- */
+
+.langBar {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.25rem;
+}
+
+.langCards {
+  display: flex;
+  gap: 0.35rem;
+  perspective: 600px;
+}
+
+.langCard {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.1rem;
+  height: 4.2rem;
+  border-radius: 8px;
+  font-family: var(--font-bree), Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1;
+  text-decoration: none !important;
+  transition: transform 220ms cubic-bezier(0.2, 1.4, 0.4, 1), box-shadow 220ms ease;
+}
+
+.langCard small {
+  position: absolute;
+  bottom: 4px;
+  right: 6px;
+  font-size: 0.75rem;
+}
+
+.langCard small.tl {
+  top: 4px;
+  left: 6px;
+  right: auto;
+  bottom: auto;
+}
+
+.langActive {
+  background: linear-gradient(180deg, #ffffff, var(--card));
+  color: #c8102e !important;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45), 0 0 0 2px var(--rim);
+  transform: translateY(-6px) rotate(-4deg);
+}
+
+.langIdle {
+  background:
+    repeating-linear-gradient(45deg, rgba(63, 208, 255, 0.2) 0 3px, transparent 3px 8px),
+    linear-gradient(180deg, var(--felt-hi), var(--felt-deep));
+  color: #d9f4ff !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 0 0 2px rgba(170, 235, 255, 0.5);
+  transform: rotate(5deg);
+}
+
+.langIdle:hover,
+.langIdle:focus-visible {
+  transform: translateY(-8px) rotate(0deg) rotateY(180deg);
+  outline: none;
+}
+
+.langIdle:hover span,
+.langIdle:focus-visible span,
+.langIdle:hover small,
+.langIdle:focus-visible small {
+  transform: rotateY(180deg);
+}
+
+.langIdle span,
+.langIdle small {
+  display: inline-block;
+}
+
+/* ---------- Video ---------- */
+
+.videoWrap {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  align-items: center;
+  margin-top: 3.5rem;
+}
+
+.videoCopy h2 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  line-height: 1.1;
+  color: var(--gold-text);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
+  margin-bottom: 0.6rem;
+}
+
+.videoCopy p {
+  color: #cfe3f5;
+  max-width: 26rem;
+}
+
+.phone {
+  justify-self: center;
+  width: min(300px, 78vw);
+  padding: 4px;
+  border-radius: 44px;
+  background: linear-gradient(180deg, var(--rim-hi) 0%, var(--rim) 35%, var(--rim-lo) 65%, var(--rim-deep) 100%);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55), 0 0 60px rgba(63, 208, 255, 0.25);
+  transform: rotate(2deg);
+  transition: transform 300ms ease;
+}
+
+.phone:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.phone video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 40px;
+  background: var(--felt-deep);
+  box-shadow: inset 0 0 0 1px var(--keyline);
+}
+
+/* ---------- Fun: deal-in and wiggles ---------- */
+
+.deal {
+  animation: deal 700ms cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+.deal2 {
+  animation-delay: 140ms;
+}
+
+.deal3 {
+  animation-delay: 280ms;
+}
+
+.step:hover .pip {
+  animation: wiggle 500ms ease;
+}
+
+.toss {
+  position: absolute;
+  top: 45%;
+  width: 2.4rem;
+  height: 3.3rem;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #fff, var(--card));
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+  font-family: var(--font-bree), Georgia, serif;
+  color: #c8102e;
+  font-size: 0.95rem;
+  padding: 3px 5px;
+  pointer-events: none;
+  opacity: 0;
+  animation: toss 2.4s cubic-bezier(0.2, 0.7, 0.3, 1) 600ms forwards;
+}
+
+.tossL {
+  left: 8%;
+  --tx: -60px;
+  --rot: -30deg;
+}
+
+.tossR {
+  right: 8%;
+  --tx: 60px;
+  --rot: 32deg;
+  color: var(--ink);
+  animation-delay: 750ms;
+}
+
+@keyframes deal {
+  from { opacity: 0; transform: translateY(40px) rotate(-3deg) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes wiggle {
+  0%, 100% { rotate: 0deg; }
+  30% { rotate: -10deg; }
+  60% { rotate: 8deg; }
+}
+
+@keyframes toss {
+  0% { opacity: 0; transform: translate(0, 60px) rotate(0deg); }
+  30% { opacity: 1; }
+  100% { opacity: 0.9; transform: translate(var(--tx), -40px) rotate(var(--rot)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deal, .toss, .step:hover .pip { animation: none; }
+  .toss { opacity: 0.9; }
+  .langCard, .phone { transition: none; }
+}
