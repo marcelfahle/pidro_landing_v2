@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Felt-dark root so overscroll and the area behind mobile browser bars match
+   the page instead of flashing white (body paints the radial gradient). */
+html {
+  background-color: #0d304b;
+}
+
 /* Remove default body styles as layout controls background/text color */
 /* 
 body {
