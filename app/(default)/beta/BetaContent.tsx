@@ -7,7 +7,7 @@ import logo from "@/public/logo-v3.png";
 
 // Store links for the side-by-side beta. Swap a value here when it changes;
 // `null` shows the "almost ready" note instead of a button.
-const TESTFLIGHT_URL: string | null = null; // public link, after Beta App Review
+const TESTFLIGHT_URL: string | null = "https://testflight.apple.com/join/2JR95b65"; // Friends group public link
 const PLAY_OPT_IN_URL = "https://play.google.com/apps/internaltest/4701258305664024339";
 const SUPPORT_EMAIL = "support@pidro.net";
 
