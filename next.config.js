@@ -30,6 +30,10 @@ const nextConfig = {
           destination: `${backendOrigin}/j/:path*`,
         },
         {
+          source: "/play/:path*",
+          destination: `${backendOrigin}/play/:path*`,
+        },
+        {
           source: "/.well-known/:path*",
           destination: `${backendOrigin}/.well-known/:path*`,
         },
