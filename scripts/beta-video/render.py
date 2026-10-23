@@ -1,6 +1,6 @@
 """Pidro Beta iPhone install explainer: frames with Pillow, audio with numpy, mux with ffmpeg.
 
-Usage: python render.py en|sv
+Usage: python render.py en|sv|fi
 """
 import math
 import subprocess
@@ -26,45 +26,76 @@ T = {
         "title": "Pidro Beta\non iPhone",
         "sub": "3 steps · 20 seconds",
         "s1": "Install TestFlight",
-        "s2": "Open your invite.\nTap Accept, then Install.",
-        "s3": "Open Pidro Beta.\nClassic stays.",
+        "s2": "Tap Get Pidro beta.\nThen Accept and Install.",
+        "s3": "Open Pidro Beta. Tap\n“Played Pidro Classic?”",
         "get": "GET",
         "open": "OPEN",
         "accept": "Accept",
         "install": "Install",
         "tf_sub": "Apple's app for test games",
         "search": "TestFlight",
-        "invite_from": "Pidro",
-        "invite_subj": "You're invited to Pidro Beta",
-        "invite_link": "Join the beta",
+        "page_head": "Pidro beta\nfor iPhone",
+        "page_done": "TestFlight installed",
+        "page_step": "Tap the button.\nTestFlight opens.",
+        "get_beta": "Get Pidro beta",
         "tf_title": "Pidro Beta",
         "tf_by": "oneapps Ab Oy",
         "end1": "See you at\nthe table",
         "end2": "pidro.online/beta",
         "classic": "Pidro",
         "beta": "Pidro Beta",
+        "plaque_q": "Played Pidro Classic?",
+        "plaque_sub": "Bring your name and games.",
     },
     "sv": {
         "title": "Pidro Beta\npå iPhone",
         "sub": "3 steg · 20 sekunder",
         "s1": "Installera TestFlight",
-        "s2": "Öppna inbjudan.\nTryck Acceptera, sedan Installera.",
-        "s3": "Öppna Pidro Beta.\nClassic finns kvar.",
+        "s2": "Tryck Hämta Pidro beta.\nSedan Acceptera och Installera.",
+        "s3": "Öppna Pidro Beta. Tryck på\n”Har du spelat Pidro Classic?”",
         "get": "HÄMTA",
         "open": "ÖPPNA",
         "accept": "Acceptera",
         "install": "Installera",
         "tf_sub": "Apples app för testspel",
         "search": "TestFlight",
-        "invite_from": "Pidro",
-        "invite_subj": "Du är inbjuden till Pidro Beta",
-        "invite_link": "Gå med i betan",
+        "page_head": "Pidro beta\nför iPhone",
+        "page_done": "TestFlight installerad",
+        "page_step": "Tryck på knappen.\nTestFlight öppnas.",
+        "get_beta": "Hämta Pidro beta",
         "tf_title": "Pidro Beta",
         "tf_by": "oneapps Ab Oy",
         "end1": "Vi ses vid\nbordet",
         "end2": "pidro.online/beta",
         "classic": "Pidro",
         "beta": "Pidro Beta",
+        "plaque_q": "Har du spelat Pidro Classic?",
+        "plaque_sub": "Ta med ditt namn och dina spel.",
+    },
+    "fi": {
+        "title": "Pidro Beta\niPhonelle",
+        "sub": "3 vaihetta · 20 sekuntia",
+        "s1": "Asenna TestFlight",
+        "s2": "Napauta Hae Pidro-beta.\nSitten Hyväksy ja Asenna.",
+        "s3": "Avaa Pidro Beta. Napauta\n”Played Pidro Classic?”",
+        "get": "HAE",
+        "open": "AVAA",
+        "accept": "Hyväksy",
+        "install": "Asenna",
+        "tf_sub": "Applen sovellus testipeleille",
+        "search": "TestFlight",
+        "page_head": "Pidro-beta\niPhonelle",
+        "page_done": "TestFlight asennettu",
+        "page_step": "Napauta painiketta.\nTestFlight avautuu.",
+        "get_beta": "Hae Pidro-beta",
+        "tf_title": "Pidro Beta",
+        "tf_by": "oneapps Ab Oy",
+        "end1": "Nähdään\npöydän ääressä",
+        "end2": "pidro.online/beta",
+        "classic": "Pidro",
+        "beta": "Pidro Beta",
+        "plaque_q": "Played Pidro Classic?",
+        "plaque_sub": "Bring your name and games.",
     },
 }[LANG]
 
@@ -330,7 +361,7 @@ def caption(base, step, text, t_in, t, y=150):
     card = Image.new("RGBA", (84, 116), (0, 0, 0, 0))
     paste_grad_rrect(card, (0, 0, 84, 116), 12, [(0, WHITE), (1, (240, 242, 247))])
     cd = ImageDraw.Draw(card)
-    lbl = {1: "A", 2: "2", 3: "3"}[step]
+    lbl = str(step)
     cd.text((12, 4), lbl, font=BREE(56), fill=RED)
     cd.text((54, 78), "♥", font=INTER(28, 700), fill=RED)
     card = card.rotate(-5 + step * 3, resample=Image.BICUBIC, expand=True)
@@ -352,7 +383,7 @@ def caption(base, step, text, t_in, t, y=150):
 
 # ---------- scenes ----------
 # timeline (seconds)
-S0, S1, S2, S3, S4 = 0.0, 2.9, 8.2, 14.2, 18.6
+S0, S1, S2, S3, S4 = 0.0, 2.9, 8.2, 14.2, 19.4
 
 
 def scene_intro(base, t):
@@ -434,26 +465,52 @@ def scene_step1(base, t):
         finger(base, x, y, press, rip if tl >= got_time else 0)
 
 
-def invite_screen(tl):
-    scr = screen_layer()
+def page_screen(tl):
+    """pidro.online/beta in Safari: step 1 done, step 2's button waiting."""
+    scr = vgrad((SCR_W, SCR_H), [(0, (28, 103, 160)), (0.55, (17, 66, 108)), (1, (13, 48, 75))]).convert("RGBA")
     d = ImageDraw.Draw(scr)
-    d.rectangle((0, 0, SCR_W, SCR_H), fill=(246, 246, 248))
-    status_bar(d)
-    d.text((40, 110), "Mail", font=INTER(58, 800), fill=(20, 20, 24))
+    status_bar(d, dark=False)
     a = ease_out(tl / 0.4)
-    y = 220 + (1 - a) * 30
-    d.rounded_rectangle((28, y, SCR_W - 28, y + 470), 30, fill=WHITE)
-    icon = rounded_icon(APP_ICON, 96)
-    scr.alpha_composite(icon, (56, int(y + 32)))
-    d.text((176, y + 36), T["invite_from"], font=INTER(34, 700), fill=(20, 20, 24))
-    d.text((176, y + 82), T["invite_subj"], font=INTER(28, 500), fill=(90, 90, 100))
-    d.line((56, y + 160, SCR_W - 56, y + 160), fill=(232, 232, 238), width=2)
-    paste_grad_rrect(scr, (56, y + 200, SCR_W - 56, y + 300), 26, [(0, (95, 195, 255)), (1, IOS_BLUE)])
-    lbl = T["invite_link"]
-    f = INTER(36, 750)
+    y = 130 + (1 - a) * 30
+    for i, line in enumerate(T["page_head"].split("\n")):
+        d.text((48, y + i * 70), line, font=BREE(62), fill=GOLD)
+    # step 1, done
+    y1 = y + 190
+    row = Image.new("RGBA", scr.size, (0, 0, 0, 0))
+    ImageDraw.Draw(row).rounded_rectangle((32, y1, SCR_W - 32, y1 + 110), 26, fill=(255, 255, 255, 34))
+    scr.alpha_composite(row)
+    d = ImageDraw.Draw(scr)
+    d.ellipse((60, y1 + 27, 116, y1 + 83), fill=(52, 199, 89))
+    d.line((74, y1 + 56, 85, y1 + 67), fill=WHITE, width=7)
+    d.line((85, y1 + 67, 104, y1 + 44), fill=WHITE, width=7)
+    d.text((140, y1 + 34), T["page_done"], font=INTER(34, 650), fill=(214, 230, 245))
+    # step 2, the button
+    y2 = y1 + 140
+    d.rounded_rectangle((32, y2, SCR_W - 32, y2 + 420), 30, fill=(250, 251, 253))
+    card = Image.new("RGBA", (64, 88), (0, 0, 0, 0))
+    paste_grad_rrect(card, (0, 0, 64, 88), 10, [(0, WHITE), (1, (232, 236, 244))])
+    cd = ImageDraw.Draw(card)
+    cd.rounded_rectangle((0, 0, 63, 87), 10, outline=(200, 208, 222), width=2)
+    cd.text((10, 2), "2", font=BREE(46), fill=RED)
+    scr.alpha_composite(card, (60, int(y2 + 36)))
+    for i, line in enumerate(T["page_step"].split("\n")):
+        d.text((150, y2 + 44 + i * 50), line, font=INTER(36, 600), fill=(8, 36, 61))
+    btn = (60, y2 + 230, SCR_W - 60, y2 + 350)
+    shadow(scr, btn, 22, blur=12, offset=(0, 8), opacity=90)
+    paste_grad_rrect(scr, btn, 22, [(0, (255, 226, 48)), (1, (247, 198, 24))])
+    d = ImageDraw.Draw(scr)
+    f = INTER(40, 800)
+    lbl = T["get_beta"]
     bb = d.textbbox((0, 0), lbl, font=f)
-    d.text((SCR_W / 2 - (bb[2] - bb[0]) / 2, y + 250 - (bb[3] - bb[1]) / 2 - bb[1]), lbl, font=f, fill=WHITE)
-    return scr, y + 250
+    d.text(((btn[0] + btn[2]) / 2 - (bb[2] - bb[0]) / 2 - bb[0], (btn[1] + btn[3]) / 2 - (bb[3] - bb[1]) / 2 - bb[1]), lbl, font=f, fill=(8, 36, 61))
+    # Safari address bar
+    bar = (40, SCR_H - 150, SCR_W - 40, SCR_H - 66)
+    d.rounded_rectangle(bar, 42, fill=(242, 242, 247))
+    f2 = INTER(32, 600)
+    url = "pidro.online/beta"
+    bb = d.textbbox((0, 0), url, font=f2)
+    d.text((SCR_W / 2 - (bb[2] - bb[0]) / 2, (bar[1] + bar[3]) / 2 - (bb[3] - bb[1]) / 2 - bb[1]), url, font=f2, fill=(20, 20, 24))
+    return scr, (btn[1] + btn[3]) / 2
 
 
 def tf_screen(tl, state):
@@ -490,11 +547,11 @@ def tf_screen(tl, state):
 def scene_step2(base, t):
     tl = t - S2
     phone_frame(base)
-    tap1 = 1.3  # tap invite link
+    tap1 = 1.3  # tap Get Pidro beta on the page
     tap2 = 2.8  # tap Accept
     tap3 = 3.9  # tap Install
     if tl < tap1 + 0.25:
-        scr, link_y = invite_screen(tl)
+        scr, link_y = page_screen(tl)
         blit_screen(base, scr)
         target = (SCR[0] + SCR_W / 2, SCR[1] + link_y)
         tap = tap1
@@ -592,14 +649,59 @@ def scene_step3(base, t):
             a = int(255 * (1 - sp))
             d.line((cx + math.cos(ang) * r0, cy + math.sin(ang) * r0, cx + math.cos(ang) * r1, cy + math.sin(ang) * r1), fill=(255, 212, 71, a), width=6)
         scr.alpha_composite(spark)
+    app_in = 2.6  # Pidro Beta opens
+    plaque_y = None
+    if tl >= app_in:
+        app, plaque_y = app_screen(tl - app_in)
+        sl = ease_out(prog(tl, app_in, 0.35))
+        app.putalpha(app.getchannel("A").point(lambda v: int(v * sl)))
+        scr = scr.copy()
+        scr.alpha_composite(app)
     blit_screen(base, scr)
     caption(base, 3, T["s3"], S3 + 0.2, t)
-    tap = 2.9
-    if tap - 0.8 < tl < tap + 0.7:
-        appear = ease_in_out(prog(tl, tap - 0.8, 0.6))
-        tx, ty = SCR[0] + pos[1][0], SCR[1] + pos[1][1]
-        sx, sy = W - 140, H - 180
-        finger(base, sx + (tx - sx) * appear, sy + (ty - sy) * appear, 1.0 if tap - 0.05 < tl < tap + 0.12 else 0.0, prog(tl, tap, 0.55) if tl >= tap else 0)
+    for tap, target in ((2.3, pos[1]), (4.0, (SCR_W / 2, plaque_y or 0))):
+        if tap - 0.8 < tl < tap + 0.7 and (tap < app_in or plaque_y is not None):
+            appear = ease_in_out(prog(tl, tap - 0.8, 0.6))
+            tx, ty = SCR[0] + target[0], SCR[1] + target[1]
+            sx, sy = W - 140, H - 180
+            finger(base, sx + (tx - sx) * appear, sy + (ty - sy) * appear, 1.0 if tap - 0.05 < tl < tap + 0.12 else 0.0, prog(tl, tap, 0.55) if tl >= tap else 0)
+            break
+
+
+def app_screen(tl):
+    """Pidro Beta's Home, with the Classic plaque the player taps."""
+    scr = vgrad((SCR_W, SCR_H), [(0, FELT_HI), (0.5, FELT), (1, FELT_DEEP)]).convert("RGBA")
+    d = ImageDraw.Draw(scr)
+    status_bar(d, dark=False)
+    logo = scaled(LOGO, (SCR_W - 200) / LOGO.width)
+    scr.alpha_composite(logo, ((SCR_W - logo.width) // 2, 120))
+    y = 140 + logo.height + 40
+    for i in range(2):
+        d.rounded_rectangle((48, y + i * 150, SCR_W - 48, y + i * 150 + 120), 28, fill=(30, 74, 120))
+    py = y + 330
+    box = (40, py, SCR_W - 40, py + 150)
+    glow = Image.new("RGBA", scr.size, (0, 0, 0, 0))
+    pulse = 0.5 + 0.5 * math.sin(tl * 6)
+    ImageDraw.Draw(glow).rounded_rectangle(box, 32, outline=GLOW + (int(120 + 100 * pulse),), width=10)
+    scr.alpha_composite(glow.filter(ImageFilter.GaussianBlur(10)))
+    d = ImageDraw.Draw(scr)
+    d.rounded_rectangle(box, 32, fill=(12, 42, 76), outline=GLOW, width=3)
+    ix = box[0] + 24
+    d.rounded_rectangle((ix, py + 35, ix + 80, py + 115), 20, fill=(20, 64, 108))
+    d.rounded_rectangle((ix + 18, py + 52, ix + 48, py + 96), 6, outline=GLOW, width=4)
+    d.rounded_rectangle((ix + 34, py + 46, ix + 64, py + 90), 6, fill=(20, 64, 108), outline=GLOW, width=4)
+    tx = ix + 104
+    avail = box[2] - tx - 56
+    f = INTER(36, 750)
+    while d.textlength(T["plaque_q"], font=f) > avail and f.size > 24:
+        f = INTER(f.size - 2, 750)
+    f2 = INTER(28, 500)
+    while d.textlength(T["plaque_sub"], font=f2) > avail and f2.size > 20:
+        f2 = INTER(f2.size - 2, 500)
+    d.text((tx, py + 34), T["plaque_q"], font=f, fill=WHITE)
+    d.text((tx, py + 88), T["plaque_sub"], font=f2, fill=(160, 222, 245))
+    d.line((box[2] - 46, py + 60, box[2] - 30, py + 75, box[2] - 46, py + 90), fill=(160, 222, 245), width=5, joint="curve")
+    return scr, py + 75
 
 
 def scene_end(base, t):
@@ -764,7 +866,8 @@ def build_audio():
     chime(S2 + 3.9 + 1.25)
     card_drop(S3 + 0.55)
     card_drop(S3 + 0.9)
-    tap(S3 + 2.9)
+    tap(S3 + 2.3)
+    tap(S3 + 4.0)
     chime(S4 + 0.8)
 
     # master: gentle fade, normalize to -3 dBFS peak
@@ -787,7 +890,7 @@ def build_audio():
 if __name__ == "__main__":
     only = sys.argv[2] if len(sys.argv) > 2 else None
     if only == "stills":
-        for tsec in (1.6, 5.5, 8.9, 11.3, 13.8, 16.2, 17.4, 20.0):
+        for tsec in (1.6, 5.5, 8.9, 11.3, 13.8, 16.2, 17.4, 18.3, 20.5):
             render_frame(int(tsec * FPS)).save(OUT / f"still_{LANG}_{tsec:.1f}.png")
         print("stills written")
         sys.exit(0)

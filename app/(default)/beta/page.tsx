@@ -1,17 +1,59 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { BetaContent } from "./BetaContent";
+import { COPY, LANGS, type Lang, type Platform } from "./copy";
 
-export const metadata: Metadata = {
-  title: "Join the Pidro Beta",
-  description: "Play the new Pidro first. It sits next to Classic until launch, then replaces it.",
-  alternates: { languages: { en: "/beta", sv: "/beta/sv" } },
-  openGraph: {
-    title: "Join the Pidro Beta",
-    description: "Play the new Pidro first.",
-    images: ["/logo-v3.png"],
-  },
-};
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-export default function BetaPage() {
-  return <BetaContent lang="en" />;
+function first(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+// ?lang= wins, then the browser's languages in order, then English.
+function pickLang(param: string | undefined, acceptLanguage: string | null): Lang {
+  if (LANGS.includes(param as Lang)) return param as Lang;
+  for (const part of (acceptLanguage ?? "").split(",")) {
+    const code = part.trim().slice(0, 2).toLowerCase();
+    if (LANGS.includes(code as Lang)) return code as Lang;
+  }
+  return "en";
+}
+
+// iPadOS sends a Mac user agent; IpadCheck corrects that in the browser.
+function detectPlatform(userAgent: string | null): Platform {
+  const ua = userAgent ?? "";
+  if (/android/i.test(ua)) return "android";
+  if (/iphone|ipad|ipod/i.test(ua)) return "ios";
+  return "computer";
+}
+
+async function resolve(searchParams: SearchParams) {
+  const params = await searchParams;
+  const h = await headers();
+  const lang = pickLang(first(params.lang), h.get("accept-language"));
+  const chosen = first(params.platform);
+  const platformParam: Platform | null = chosen === "ios" || chosen === "android" ? chosen : null;
+  const ua = h.get("user-agent");
+  return {
+    lang,
+    platformParam,
+    platform: platformParam ?? detectPlatform(ua),
+    maybeIpad: !platformParam && /macintosh/i.test(ua ?? ""),
+  };
+}
+
+export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
+  const { lang } = await resolve(searchParams);
+  const description = COPY[lang].metaDescription;
+  return {
+    title: "Pidro beta",
+    description,
+    // The invite email is the only way in; keep the page out of search.
+    robots: { index: false, follow: false },
+    openGraph: { title: "Pidro beta", description, images: ["/logo-v3.png"] },
+  };
+}
+
+export default async function BetaPage({ searchParams }: { searchParams: SearchParams }) {
+  return <BetaContent {...await resolve(searchParams)} />;
 }

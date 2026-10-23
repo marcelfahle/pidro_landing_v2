@@ -6,6 +6,7 @@ import SessionProvider from "@/components/SessionProvider";
 import NavbarWrapper from "@/components/NavbarWrapper"; // Import NavbarWrapper
 // import Header from "@/components/header"; // Remove Header import
 import Footer from "@/components/Footer"; // Import Footer
+import HideOnBeta from "@/components/HideOnBeta";
 import "@/styles/globals.css";
 // import "./styles/iphone-frame.css"; // Can likely remove if only Header used it
 
@@ -48,7 +49,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className="min-h-screen flex flex-col text-gray-200 pb-10 font-sans leading-[1.5] bg-[radial-gradient(circle,rgba(28,103,160,1)_0%,rgba(13,48,75,1)_100%)] [&_a]:text-[#ffe230] [&_a]:no-underline hover:[&_a]:text-yellow-300 [&_nav_a]:text-white hover:[&_nav_a]:text-[#ffe230]">
         {/* SessionProvider wraps everything to make session available */}
         <SessionProvider>
-          <NavbarWrapper />
+          <HideOnBeta>
+            <NavbarWrapper />
+          </HideOnBeta>
           {/* Remove conditional Header rendering */}
           {/* {isHomePage && <Header />} */}
 
@@ -57,7 +60,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             {children}
           </main>
 
-          <Footer />
+          <HideOnBeta>
+            <Footer />
+          </HideOnBeta>
         </SessionProvider>
       </body>
     </html>
