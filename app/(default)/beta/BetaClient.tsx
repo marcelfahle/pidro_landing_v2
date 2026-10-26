@@ -10,16 +10,27 @@ declare global {
   }
 }
 
+// Counts one open of an invite link. The code is random and means nothing on its own;
+// only Marcel's invite list knows whose it is.
+export function InviteOpened({ invite, lang }: { invite: string; lang: string }) {
+  useEffect(() => {
+    window.plausible?.("beta_invite_open", { props: { i: invite, lang } });
+  }, [invite, lang]);
+  return null;
+}
+
 // A store button. `event` counts the taps that matter: who got through the email.
 export function StoreButton({
   href,
   event,
   lang,
+  invite,
   children,
 }: {
   href: string;
   event?: string;
   lang: string;
+  invite?: string | null;
   children: ReactNode;
 }) {
   return (
@@ -27,7 +38,11 @@ export function StoreButton({
       href={href}
       className={styles.btn}
       rel="noopener"
-      onClick={event ? () => window.plausible?.(event, { props: { lang } }) : undefined}
+      onClick={
+        event
+          ? () => window.plausible?.(event, { props: invite ? { lang, i: invite } : { lang } })
+          : undefined
+      }
     >
       <span className={styles.btnFace}>
         {children}

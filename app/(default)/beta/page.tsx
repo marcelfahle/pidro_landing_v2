@@ -39,6 +39,8 @@ async function resolve(searchParams: SearchParams) {
     platformParam,
     platform: platformParam ?? detectPlatform(ua),
     maybeIpad: !platformParam && /macintosh/i.test(ua ?? ""),
+    // The invite code from the email; anything that isn't a short code is ignored.
+    invite: /^[a-z0-9]{4,12}$/.test(first(params.i) ?? "") ? (first(params.i) as string) : null,
   };
 }
 

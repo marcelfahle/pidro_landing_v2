@@ -3,8 +3,9 @@ import type { ReactNode } from "react";
 // All copy for /beta, in the three languages the invite emails go out in.
 // The Swedish and Finnish strings are first drafts for Marcel to review.
 // UI labels in quotes must match what the person sees on their screen: the
-// app's Classic button (`social.classic_question`; the app has no Finnish yet,
+// app's first-screen button (`social.classic_question`; the app has no Finnish yet,
 // so Finnish phones show the English label), TestFlight and Google Play.
+// Players have never heard the word "Classic"; say "the Pidro you play now".
 
 export const LANGS = ["sv", "fi", "en"] as const;
 export type Lang = (typeof LANGS)[number];
@@ -19,7 +20,7 @@ export interface BetaCopy {
   lede: string;
   stepsTitle: string;
   ios: { s1: ReactNode; getTestflight: string; s2: ReactNode; getBeta: string };
-  android: { s1: ReactNode; joinBeta: string; s2: ReactNode; openPlay: string };
+  android: { s1: ReactNode; install: string };
   s3: ReactNode;
   opens: (date: string | null) => string;
   video: { title: string; body: string; label: string };
@@ -41,12 +42,12 @@ export const COPY: Record<Lang, BetaCopy> = {
       android: "Pidro beta for Android",
       computer: "Pidro beta",
     },
-    lede: "This is the new Pidro, built from the same game. Your Classic name, level and games come with you, and Classic keeps working.",
+    lede: "This is the new Pidro, built from the same game. Your Pidro name, level and games come with you, and the Pidro app you play now keeps working.",
     stepsTitle: "Three steps",
     ios: {
       s1: (
         <>
-          Install <strong>TestFlight</strong>, Apple&rsquo;s app for trying new apps.
+          Install <strong>TestFlight</strong>. It&rsquo;s a free app from Apple that you need for test versions.
         </>
       ),
       getTestflight: "Get TestFlight",
@@ -61,17 +62,15 @@ export const COPY: Record<Lang, BetaCopy> = {
     android: {
       s1: (
         <>
-          Tap the button and choose <strong>Become a tester</strong>.
+          Tap the button. Google Play opens. Tap <strong>Install</strong>.
         </>
       ),
-      joinBeta: "Join the beta",
-      s2: <>Install Pidro Beta from Google Play.</>,
-      openPlay: "Open Google Play",
+      install: "Get Pidro Beta",
     },
     s3: (
       <>
-        Open <strong>Pidro Beta</strong>. Tap <strong>&ldquo;Played Pidro Classic?&rdquo;</strong> and
-        sign in the way you did in Classic.
+        Open <strong>Pidro Beta</strong>. At the bottom, tap <strong>&ldquo;Already play Pidro?&rdquo;</strong>{" "}
+        and sign in the way you always do.
       </>
     ),
     opens: (date) => (date ? `Opens on ${date}. Check back then.` : "Opens soon. Check back then."),
@@ -95,7 +94,7 @@ export const COPY: Record<Lang, BetaCopy> = {
       title: "Something not working?",
       body: (email) => <>Reply to Marcel&rsquo;s email, or write to {email}.</>,
     },
-    classic: "Your Pidro Classic app keeps working. Nothing there changes.",
+    classic: "Your old Pidro app keeps working. Nothing there changes.",
     switchTo: {
       android: { question: "Not an iPhone?", link: "Show the Android steps" },
       ios: { question: "Not an Android phone?", link: "Show the iPhone steps" },
@@ -111,12 +110,12 @@ export const COPY: Record<Lang, BetaCopy> = {
       android: "Pidro beta för Android",
       computer: "Pidro beta",
     },
-    lede: "Det här är nya Pidro, byggt på samma spel. Ditt namn, din nivå och dina spel från Classic följer med, och Classic fortsätter att fungera.",
+    lede: "Det här är nya Pidro, byggt på samma spel. Ditt Pidro-namn, din nivå och dina spel följer med, och Pidro-appen du spelar nu fungerar som vanligt.",
     stepsTitle: "Tre steg",
     ios: {
       s1: (
         <>
-          Installera <strong>TestFlight</strong>, Apples app för att prova nya appar.
+          Installera <strong>TestFlight</strong>. Det är en gratis app från Apple som behövs för testversioner.
         </>
       ),
       getTestflight: "Hämta TestFlight",
@@ -131,17 +130,15 @@ export const COPY: Record<Lang, BetaCopy> = {
     android: {
       s1: (
         <>
-          Tryck på knappen och välj <strong>Bli testare</strong>.
+          Tryck på knappen. Google Play öppnas. Tryck <strong>Installera</strong>.
         </>
       ),
-      joinBeta: "Gå med i betan",
-      s2: <>Installera Pidro Beta från Google Play.</>,
-      openPlay: "Öppna Google Play",
+      install: "Hämta Pidro Beta",
     },
     s3: (
       <>
-        Öppna <strong>Pidro Beta</strong>. Tryck på <strong>&rdquo;Har du spelat Pidro Classic?&rdquo;</strong>{" "}
-        och logga in som du gjorde i Classic.
+        Öppna <strong>Pidro Beta</strong>. Längst ner, tryck på <strong>&rdquo;Spelar du redan Pidro?&rdquo;</strong>{" "}
+        och logga in som du alltid gör.
       </>
     ),
     opens: (date) => (date ? `Öppnar den ${date}. Titta in igen då.` : "Öppnar snart. Titta in igen då."),
@@ -165,7 +162,7 @@ export const COPY: Record<Lang, BetaCopy> = {
       title: "Fungerar något inte?",
       body: (email) => <>Svara på Marcels mejl, eller skriv till {email}.</>,
     },
-    classic: "Din Pidro Classic-app fungerar som vanligt. Där ändras ingenting.",
+    classic: "Din gamla Pidro-app fungerar som vanligt. Där ändras ingenting.",
     switchTo: {
       android: { question: "Inte en iPhone?", link: "Visa stegen för Android" },
       ios: { question: "Inte en Android-telefon?", link: "Visa stegen för iPhone" },
@@ -181,12 +178,12 @@ export const COPY: Record<Lang, BetaCopy> = {
       android: "Pidro-beta Androidille",
       computer: "Pidro-beta",
     },
-    lede: "Tämä on uusi Pidro, rakennettu samasta pelistä. Classicin nimesi, tasosi ja pelisi tulevat mukana, ja Classic toimii edelleen.",
+    lede: "Tämä on uusi Pidro, rakennettu samasta pelistä. Pidro-nimesi, tasosi ja pelisi tulevat mukana, ja nykyinen Pidro-sovelluksesi toimii edelleen.",
     stepsTitle: "Kolme vaihetta",
     ios: {
       s1: (
         <>
-          Asenna <strong>TestFlight</strong>, Applen sovellus uusien sovellusten kokeiluun.
+          Asenna <strong>TestFlight</strong>. Se on Applen ilmainen sovellus, jota testiversiot tarvitsevat.
         </>
       ),
       getTestflight: "Hae TestFlight",
@@ -201,17 +198,15 @@ export const COPY: Record<Lang, BetaCopy> = {
     android: {
       s1: (
         <>
-          Napauta painiketta ja valitse <strong>Ryhdy testaajaksi</strong>.
+          Napauta painiketta. Google Play avautuu. Napauta <strong>Asenna</strong>.
         </>
       ),
-      joinBeta: "Liity betaan",
-      s2: <>Asenna Pidro Beta Google Playsta.</>,
-      openPlay: "Avaa Google Play",
+      install: "Hae Pidro Beta",
     },
     s3: (
       <>
-        Avaa <strong>Pidro Beta</strong>. Napauta <strong>&rdquo;Played Pidro Classic?&rdquo;</strong> ja
-        kirjaudu sisään samalla tavalla kuin Classicissa.
+        Avaa <strong>Pidro Beta</strong>. Napauta alareunasta <strong>&rdquo;Already play Pidro?&rdquo;</strong>{" "}
+        ja kirjaudu sisään niin kuin aina.
       </>
     ),
     opens: (date) =>
@@ -236,7 +231,7 @@ export const COPY: Record<Lang, BetaCopy> = {
       title: "Eikö jokin toimi?",
       body: (email) => <>Vastaa Marcelin sähköpostiin tai kirjoita osoitteeseen {email}.</>,
     },
-    classic: "Pidro Classic -sovelluksesi toimii kuten ennenkin. Siihen ei tule muutoksia.",
+    classic: "Vanha Pidro-sovelluksesi toimii kuten ennenkin. Siihen ei tule muutoksia.",
     switchTo: {
       android: { question: "Eikö sinulla ole iPhonea?", link: "Näytä Android-ohjeet" },
       ios: { question: "Eikö sinulla ole Android-puhelinta?", link: "Näytä iPhone-ohjeet" },

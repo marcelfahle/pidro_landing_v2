@@ -2,19 +2,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { Bree_Serif } from "next/font/google";
 import { COPY, LANGS, type Lang, type Platform } from "./copy";
-import { InstallVideo, IpadCheck, StoreButton } from "./BetaClient";
+import { InstallVideo, InviteOpened, IpadCheck, StoreButton } from "./BetaClient";
 import styles from "./beta.module.css";
 import logo from "@/public/logo-v3.png";
 
 // The two beta doors. Empty means "not open yet": the page shows when it opens
 // (NEXT_PUBLIC_BETA_OPENS, an ISO date) instead of a button. The iOS fallback is
-// the TestFlight public link that has been live since September.
+// the TestFlight public link that has been live since September. Android is the
+// Play listing itself (early access: no join step), set once Google approves it.
 const IOS_URL = process.env.NEXT_PUBLIC_BETA_IOS_URL || "https://testflight.apple.com/join/2JR95b65";
 const ANDROID_URL = process.env.NEXT_PUBLIC_BETA_ANDROID_URL || "";
 const OPENS = process.env.NEXT_PUBLIC_BETA_OPENS || "";
 
 const TESTFLIGHT_STORE = "https://apps.apple.com/app/testflight/id899247664";
-const PLAY_LISTING = "https://play.google.com/store/apps/details?id=com.oneapps.pidro.beta";
 const HELP_EMAIL = "marcel@pidro.online";
 
 const bree = Bree_Serif({
@@ -31,8 +31,12 @@ function formatOpens(lang: Lang) {
   return new Intl.DateTimeFormat(COPY[lang].locale, { day: "numeric", month: "long", timeZone: "UTC" }).format(date);
 }
 
-function href(lang: Lang, platform: Platform | null) {
-  return platform ? `/beta?lang=${lang}&platform=${platform}` : `/beta?lang=${lang}`;
+// The invite code rides along when the reader switches language or platform.
+function href(invite: string | null, lang: Lang, platform: Platform | null) {
+  const query = new URLSearchParams({ lang });
+  if (platform) query.set("platform", platform);
+  if (invite) query.set("i", invite);
+  return `/beta?${query}`;
 }
 
 const SUITS = [
@@ -71,11 +75,13 @@ export function BetaContent({
   platform,
   platformParam,
   maybeIpad,
+  invite,
 }: {
   lang: Lang;
   platform: Platform;
   platformParam: Platform | null;
   maybeIpad: boolean;
+  invite: string | null;
 }) {
   const c = COPY[lang];
   const opens = c.opens(formatOpens(lang));
@@ -87,7 +93,8 @@ export function BetaContent({
 
   return (
     <div lang={lang} className={`${styles.page} ${bree.variable}`}>
-      {maybeIpad && <IpadCheck href={href(lang, "ios")} />}
+      {invite && <InviteOpened invite={invite} lang={lang} />}
+      {maybeIpad && <IpadCheck href={href(invite, lang, "ios")} />}
 
       <header className={styles.top}>
         <Image src={logo} alt="Pidro" priority sizes="104px" className={styles.wordmark} />
@@ -96,7 +103,7 @@ export function BetaContent({
             {LANGS.map((l) => (
               <li key={l}>
                 <Link
-                  href={href(l, platformParam)}
+                  href={href(invite, l, platformParam)}
                   hrefLang={l}
                   lang={l}
                   aria-current={l === lang ? "true" : undefined}
@@ -126,10 +133,10 @@ export function BetaContent({
               <p className={styles.computerScan}>{c.computer.scan}</p>
               <p className={styles.pickLabel}>{c.computer.pick}</p>
               <div className={styles.pick}>
-                <Link href={href(lang, "ios")} className={styles.pickLink}>
+                <Link href={href(invite, lang, "ios")} className={styles.pickLink}>
                   {c.computer.ios}
                 </Link>
-                <Link href={href(lang, "android")} className={styles.pickLink}>
+                <Link href={href(invite, lang, "android")} className={styles.pickLink}>
                   {c.computer.android}
                 </Link>
               </div>
@@ -153,7 +160,7 @@ export function BetaContent({
                 <Step n={2}>
                   <p>{c.ios.s2}</p>
                   {IOS_URL ? (
-                    <StoreButton href={IOS_URL} event="beta_ios_tap" lang={lang}>
+                    <StoreButton href={IOS_URL} event="beta_ios_tap" lang={lang} invite={invite}>
                       {c.ios.getBeta}
                     </StoreButton>
                   ) : (
@@ -169,22 +176,14 @@ export function BetaContent({
                 <Step n={1}>
                   <p>{c.android.s1}</p>
                   {ANDROID_URL ? (
-                    <StoreButton href={ANDROID_URL} event="beta_android_tap" lang={lang}>
-                      {c.android.joinBeta}
+                    <StoreButton href={ANDROID_URL} event="beta_android_tap" lang={lang} invite={invite}>
+                      {c.android.install}
                     </StoreButton>
                   ) : (
                     <Opens text={opens} />
                   )}
                 </Step>
                 <Step n={2}>
-                  <p>{c.android.s2}</p>
-                  {ANDROID_URL && (
-                    <StoreButton href={PLAY_LISTING} lang={lang}>
-                      {c.android.openPlay}
-                    </StoreButton>
-                  )}
-                </Step>
-                <Step n={3}>
                   <p>{c.s3}</p>
                 </Step>
               </ol>
@@ -219,7 +218,7 @@ export function BetaContent({
       {platform !== "computer" && (
         <p className={styles.switch}>
           {c.switchTo[platform === "ios" ? "android" : "ios"].question}{" "}
-          <Link href={href(lang, platform === "ios" ? "android" : "ios")}>
+          <Link href={href(invite, lang, platform === "ios" ? "android" : "ios")}>
             {c.switchTo[platform === "ios" ? "android" : "ios"].link}
           </Link>
         </p>
