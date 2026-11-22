@@ -2,6 +2,6 @@ export { auth as middleware } from "@/auth";
 
 export const config = {
   matcher: [
-    "/((?!j(?:/|$)|play(?:/|$)|\\.well-known(?:/|$)|apple-app-site-association(?:/|$)|_next/static|_next/image|favicon\\.ico$).*)",
+    "/((?!j(?:/|$)|play(?:/|$)|get(?:/|$)|\\.well-known(?:/|$)|apple-app-site-association(?:/|$)|_next/static|_next/image|favicon\\.ico$).*)",
   ],
 };
