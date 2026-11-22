@@ -31,35 +31,6 @@ const POLICY_PROSE_CLASSES = `mx-auto max-w-[640px]
   prose-blockquote:text-gray-300 prose-blockquote:border-[#ffe230]
   prose-code:text-pink-400`;
 
-function InviteInstallPrivacyAddendum() {
-  return (
-    <section aria-labelledby="invite-install-matching">
-      <hr />
-      <h2 id="invite-install-matching">Invite installation matching</h2>
-      <p>
-        If you tap the matching app-store button on a Pidro invitation, Pidro
-        may use your network address, mobile platform and operating-system major
-        version, a broad screen-size category, language/locale, and time zone to
-        restore that invitation when you first open the installed app.
-      </p>
-      <p>
-        The matching hint is held only in Pidro&apos;s server memory and is
-        permanently deleted when it is used, when the server restarts, or no
-        later than 30 minutes after the store click. Pidro does not send this
-        matching data to a hosted deferred-link or attribution vendor, and it
-        does not use an advertising identifier for this purpose.
-      </p>
-      <p>
-        The app also creates a separate random identifier for that installation
-        to enforce abuse limits. It is not used to match the browser to the app.
-        If you continue as a guest, the identifier may be stored with the guest
-        account until you delete it or the account is removed after 30 days of
-        inactivity.
-      </p>
-    </section>
-  );
-}
-
 // --- Data Fetching ---
 
 async function getPageData(slug: string) {
@@ -139,7 +110,6 @@ export default async function Page({
             __html: page.content, // Content is pre-rendered HTML from DatoCMS
           }}
         />
-        {slug === "privacy-policy" ? <InviteInstallPrivacyAddendum /> : null}
       </div>
     </div>
   );

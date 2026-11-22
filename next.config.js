@@ -22,6 +22,14 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    // Old copies of the policies. The current ones are code pages
+    // (app/(default)/privacy-policy, terms-of-use).
+    return [
+      { source: "/privacy", destination: "/privacy-policy", permanent: true },
+      { source: "/terms", destination: "/terms-of-use", permanent: true },
+    ];
+  },
   async rewrites() {
     return {
       beforeFiles: [
