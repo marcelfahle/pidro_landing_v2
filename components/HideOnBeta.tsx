@@ -2,9 +2,9 @@
 
 import { usePathname } from "next/navigation";
 
-// /beta is a single-purpose install page: no site navigation around it.
+// /beta and /new are single-purpose pages: no site navigation around them.
 export default function HideOnBeta({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  if (pathname === "/beta" || pathname.startsWith("/beta/")) return null;
+  if (/^\/(beta|new)(\/|$)/.test(pathname)) return null;
   return <>{children}</>;
 }

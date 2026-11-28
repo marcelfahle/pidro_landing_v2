@@ -42,7 +42,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           strategy="afterInteractive"
         />
         <Script id="plausible-init" strategy="afterInteractive">
-          {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()`}
+          {`window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init({customProperties:function(){var f=new URLSearchParams(location.search).get("from");return f?{from:f.slice(0,40)}:{}}})`}
         </Script>
       </head>
       {/* Apply the base styling to the body tag */}

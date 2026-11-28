@@ -1,0 +1,473 @@
+/* /new: the relaunch letter. Same felt and gold as /beta, same rules: 18px+ body,
+   56px+ buttons, one column that holds at 320px, nothing that moves on scroll. */
+
+.page {
+  --felt-hi: #175086;
+  --felt: #0e3158;
+  --felt-deep: #0a2340;
+  --rim-hi: #f6de9a;
+  --rim: #e2af45;
+  --rim-lo: #c4892a;
+  --rim-deep: #8f5e12;
+  --gold: #ffd447;
+  --glow: #3fd0ff;
+  --card: #fbfaf6;
+  --ink: #08243d;
+  --text: #f1f7fc;
+  --text-soft: #d6e6f3;
+  --line: rgba(170, 235, 255, 0.2);
+  --red: #c8102e;
+
+  max-width: 35rem;
+  margin: 0 auto;
+  padding-bottom: 1.5rem;
+  font-size: 1.1875rem;
+  line-height: 1.5;
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+}
+
+:global(html):has(.page),
+:global(body):has(.page) {
+  overflow-x: clip;
+}
+
+.page a:focus-visible {
+  outline: 3px solid var(--glow);
+  outline-offset: 3px;
+}
+
+/* ---------- Top: the language switch, then the logo as the hero ---------- */
+
+.top {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+}
+
+.langs {
+  display: flex;
+  margin: 0;
+  padding: 3px;
+  list-style: none;
+  border-radius: 999px;
+  background: rgba(5, 22, 40, 0.55);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.lang,
+.langOn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.page .lang {
+  color: var(--text-soft) !important;
+}
+
+.page .lang:hover {
+  color: #fff !important;
+}
+
+.page .langOn {
+  color: var(--ink) !important;
+  background: linear-gradient(180deg, #ffe98a, var(--gold) 55%, #f0b52c);
+  box-shadow: inset 0 0 0 1px rgba(143, 94, 18, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.hero {
+  position: relative;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* The game's own light: a cyan pool behind the logo, like the glow on its cards */
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -1rem;
+  left: 50%;
+  width: min(30rem, 120vw);
+  height: 16rem;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(63, 208, 255, 0.28), transparent);
+  pointer-events: none;
+}
+
+.home {
+  display: inline-block;
+  line-height: 0;
+  border-radius: 12px;
+}
+
+.logo {
+  width: min(22rem, 82vw);
+  height: auto;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+}
+
+.title {
+  margin: 1.25rem 0 0;
+  font-family: var(--font-bree), Georgia, serif;
+  font-size: clamp(2.125rem, 10vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.06;
+  color: var(--gold);
+  text-wrap: balance;
+  text-shadow:
+    0 2px 0 var(--rim-deep),
+    0 8px 22px rgba(0, 0, 0, 0.45);
+}
+
+.intro {
+  margin: 0.9rem auto 0;
+  max-width: 30rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+/* ---------- Before: "What you need to do. Nothing." ---------- */
+
+.panel {
+  margin-top: 1.75rem;
+  padding: 3px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, var(--rim-hi) 0%, var(--rim) 30%, var(--rim-lo) 70%, var(--rim-deep) 100%);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.42);
+}
+
+.panelFace {
+  border-radius: 19px;
+  padding: 1.25rem 1.15rem 1.35rem;
+  background:
+    radial-gradient(ellipse 120% 50% at 50% 0%, rgba(63, 208, 255, 0.14), transparent 60%),
+    linear-gradient(180deg, var(--felt-hi) 0%, var(--felt) 45%, var(--felt-deep) 100%);
+  box-shadow:
+    inset 0 0 0 1px #2a1505,
+    inset 0 2px 0 rgba(255, 255, 255, 0.08);
+}
+
+.label {
+  margin: 0;
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text-soft);
+}
+
+/* The answer: the loudest thing in the panel, still below the headline. */
+.answer {
+  margin: 0.15rem 0 0.9rem;
+  font-family: var(--font-bree), Georgia, serif;
+  font-size: clamp(1.875rem, 8.2vw, 2.5rem);
+  line-height: 1.08;
+  color: var(--gold);
+  text-wrap: balance;
+  text-shadow:
+    0 2px 0 var(--rim-deep),
+    0 8px 22px rgba(0, 0, 0, 0.45);
+}
+
+.checks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checks li {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: start;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.checks li:last-child {
+  padding-bottom: 0;
+}
+
+.check {
+  margin-top: 0.05rem;
+  color: var(--gold);
+}
+
+/* ---------- The screenshot: a phone on its side, turnable upright ---------- */
+
+.shot {
+  margin: 2rem 0 0;
+  text-align: center;
+}
+
+.shotBox {
+  container-type: inline-size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bezel {
+  flex: none;
+  padding: 3px;
+  background: linear-gradient(180deg, var(--rim-hi) 0%, var(--rim) 35%, var(--rim-lo) 65%, var(--rim-deep) 100%);
+  box-shadow:
+    0 22px 44px rgba(0, 0, 0, 0.5),
+    0 0 46px rgba(63, 208, 255, 0.2);
+}
+
+.bezel img {
+  display: block;
+  background: #071b33;
+}
+
+.bezelWide {
+  width: 100%;
+  border-radius: 26px;
+}
+
+.bezelWide img {
+  width: 100%;
+  height: auto;
+  border: 7px solid #050d17;
+  border-radius: 23px;
+}
+
+/* Upright: as tall as the column is wide, times 1.25 (UPRIGHT_SCALE in TurnableShot) */
+.bezelTall {
+  height: 125cqw;
+  border-radius: 26px;
+}
+
+.bezelTall img {
+  width: auto;
+  height: 100%;
+  border: 7px solid #050d17;
+  border-radius: 23px;
+}
+
+.turn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-top: -1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffeb94 0%, var(--gold) 48%, #f0b52c 100%);
+  box-shadow:
+    0 0 0 3px var(--rim-deep),
+    0 6px 14px rgba(0, 0, 0, 0.45);
+  color: var(--ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 140ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.turn:active {
+  transform: scale(0.94);
+}
+
+.turn:focus-visible {
+  outline: 3px solid var(--glow);
+  outline-offset: 3px;
+}
+
+/* ---------- What is new ---------- */
+
+.section {
+  margin-top: 2.25rem;
+}
+
+.news {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.news li {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  gap: 0.95rem;
+  align-items: start;
+}
+
+.news li + li {
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
+.news p {
+  margin: 0;
+  padding-top: 0.2rem;
+}
+
+/* Each new thing gets a small card, the suits in turn */
+.pip {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 3.5rem;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #fff, var(--card));
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.42),
+    inset 0 0 0 1px rgba(8, 36, 61, 0.15);
+  font-family: system-ui, sans-serif;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink);
+  transform: rotate(-4deg);
+}
+
+.news li:nth-child(2) .pip {
+  transform: rotate(3deg);
+}
+
+.news li:nth-child(3) .pip {
+  transform: rotate(-2deg);
+}
+
+.news li:nth-child(4) .pip {
+  transform: rotate(4deg);
+}
+
+.red {
+  color: var(--red);
+}
+
+/* ---------- After: the store buttons ---------- */
+
+.stores {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 560px) {
+  .stores {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.btn {
+  display: flex;
+  min-height: 4rem;
+  padding: 3px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--rim-hi) 0%, var(--rim) 35%, var(--rim-lo) 65%, var(--rim-deep) 100%);
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.3);
+  text-decoration: none !important;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 140ms cubic-bezier(0.25, 1, 0.5, 1),
+    filter 140ms ease;
+}
+
+.btnFace {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 15px;
+  background: linear-gradient(180deg, #ffeb94 0%, var(--gold) 48%, #f0b52c 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(143, 94, 18, 0.55),
+    inset 0 2px 0 rgba(255, 255, 255, 0.55);
+  color: var(--ink);
+  font-size: 1.3125rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.btnFace svg {
+  flex: none;
+}
+
+/* The other platform's store, on a phone: there, but not shouting */
+.btnQuiet {
+  background: rgba(255, 212, 71, 0.75);
+  box-shadow: none;
+}
+
+.btnQuiet .btnFace {
+  background: var(--felt-deep);
+  box-shadow: none;
+  color: var(--gold);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    filter: brightness(1.06);
+  }
+}
+
+.btn:active {
+  transform: translateY(2px);
+  filter: brightness(0.96);
+}
+
+.update {
+  margin: 1rem 0 0;
+  padding-left: 0.9rem;
+  border-left: 3px solid var(--gold);
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.signIn {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: start;
+  margin: 2rem 0 0;
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  background: rgba(5, 22, 40, 0.5);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* ---------- Sign-off ---------- */
+
+.signOff {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 2.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-bree), Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--gold);
+}
+
+.signOff span {
+  font-family: system-ui, sans-serif;
+  font-size: 1.1rem;
+  color: var(--text-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .turn {
+    transition: none;
+  }
+}
